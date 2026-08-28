@@ -62,3 +62,7 @@ In Vercel:
 Do not put the real key in `youtube-config.js`, `script.js`, HTML, or GitHub.
 
 Because the API key was pasted into a chat, rotate/restrict that key in Google Cloud before putting the replacement into Vercel. Restrict the key to the YouTube Data API v3.
+
+
+## Playlist list behavior
+The Full Playlist button now opens Utsav's own scrollable song list. It does not open an iframe, does not show only the current video's thumbnail, and does not include an external-playlist button. Each item displays its number, thumbnail, title and channel. Tapping an item loads that video into the main Utsav YouTube player.
