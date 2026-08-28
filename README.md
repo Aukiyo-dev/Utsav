@@ -1,75 +1,52 @@
-# Utsav Festival Countdown
+# Utsav — Spotify Web Playback Edition
 
-Three-tab festival countdown website with a glassmorphism interface and supplied festival artwork.
+This version replaces the Spotify preview-style embed with Spotify's official **Web Playback SDK** architecture.
 
-## Festival order
+## What it does
 
-1. Durga Puja — `assets/durga-puja.jpg`
-2. Kali Puja — `assets/kali-puja.jpg`
-3. Diwali — `assets/diwali.jpg`
+- Full-song playback through Spotify's authorized Web Playback SDK.
+- Real-time "Now Playing" title, artist, artwork, duration and progress.
+- Play / pause / next / previous controls.
+- Shuffle and repeat controls.
+- Festival playlist browser.
+- The three Utsav festival tabs:
+  - Durga Puja — playlist `0z11u9nIBzaddobcW4ujFO`
+  - Kali Puja — playlist `0sBXfKzF43guyOY9FXRofi`
+  - Diwali — playlist `0bp35vrrt5SIWqf2NW7Ue4`
+- Existing glassmorphism design and compact mobile layout.
+- Images are copied to both the project root and `assets/` so the site can work with either GitHub layout.
 
-The three images were supplied in that order and are used as the full-page background when the corresponding tab is selected.
+## Important Spotify requirements
 
-## Real-time dates
+Spotify's Web Playback SDK requires a **Spotify Premium** account for playback. It also requires a Spotify Developer app and OAuth authorization. Spotify's current Development Mode is intended for personal/non-commercial projects and has limits on authorized users. See Spotify's current documentation before deploying publicly.
 
-- Durga Puja first main day / Shashthi: 16 October 2026
-- Kali Puja: 8 November 2026
-- Diwali: 8 November 2026
+Spotify's SDK documentation:
+https://developer.spotify.com/documentation/web-playback-sdk
 
-Countdown timestamps use India Standard Time (`+05:30`) and refresh every second.
+## One-time setup
 
-## Spotify
+1. Create a Spotify Developer app.
+2. Copy its **Client ID**.
+3. Open `spotify-config.js`.
+4. Replace:
 
-The supplied playlists are already connected:
+   `PASTE_YOUR_SPOTIFY_CLIENT_ID_HERE`
 
-- Durga Puja: `1zVKSwcN1UDYBXsBWQlp16`
-- Kali Puja: `5AcGh4bu9Os1VAySz77de4`
-- Diwali: `33GvF5IHA1WAZsF8KANGiG`
+   with your Client ID.
+5. In the Spotify Developer app settings, add the exact Utsav URL as a Redirect URI.
 
-The small player is embedded in the website. **Full playlist** opens a glassmorphism overlay where visitors can browse the complete playlist without navigating the main site away.
+For your current deployment, that is:
 
-Spotify controls its own playback/account limitations.
+`https://utsav-ecru.vercel.app/`
+
+The redirect URI must match exactly.
+
+**Never put the Spotify Client Secret in this static project.** This implementation uses OAuth Authorization Code with PKCE, which is designed for browser apps where a client secret cannot be safely stored.
 
 ## Vercel
 
-This is a static site. Deploy the folder/repository as-is. No build command or server is required.
+Because this is a static frontend, it can remain on your existing Vercel project. After adding the Client ID and committing the files to the connected GitHub repository, Vercel can deploy the update.
 
+## Important policy limitation
 
-## Latest playlist IDs
-
-- Durga Puja: `0z11u9nIBzaddobcW4ujFO`
-- Kali Puja: `0sBXfKzF43guyOY9FXRofi`
-- Diwali: `0bp35vrrt5SIWqf2NW7Ue4`
-
-## SEO
-
-The site now includes:
-- descriptive title and meta description
-- Open Graph / Twitter metadata
-- canonical URL for `https://utsav-ecru.vercel.app/`
-- `robots.txt`
-- `sitemap.xml`
-- a Web App Manifest
-- concise visible semantic copy describing Utsav and the three festivals
-
-SEO can improve discoverability, but no code can guarantee a #1 Google ranking for “Utsav” or “Utsav countdown”; rankings depend on indexing, competition, authority, relevance, links and Google's systems.
-
-
-## GitHub image setup
-
-The background images are now referenced from the repository root, not an `assets/` folder.
-
-Keep these four files together in the root:
-- `index.html`
-- `style.css`
-- `script.js`
-- `durga-puja.jpg`
-- `kali-puja.jpg`
-- `diwali.jpg`
-
-
-Mobile layout was tightened to reduce the hero, countdown, tabs and Spotify player height on small screens while leaving desktop sizing intact.
-
-
-### Playback controls
-The Spotify embed itself shows the current track and provides Spotify's supported playback controls. The site does not add fake Shuffle/Repeat buttons because Spotify's embedded iframe does not expose reliable external controls for those modes without a separate authenticated Spotify integration. No separate Dhak/sound effect button is included.
+Spotify's current developer documentation states that streaming applications may not be commercial without the required Spotify approval. If Utsav is going to be used commercially, obtain the appropriate permission before using Spotify Web Playback.
