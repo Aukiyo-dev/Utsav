@@ -78,10 +78,7 @@
           <button class="playlist-button glass-button" id="openPlaylist" type="button">☷ Full playlist ↗</button>
         </div>
 
-        <div class="player-mini-row"><button id="miniPlayPause" class="mini-play glass-button" type="button" aria-label="Play or pause festival music">▶</button><button id="playerToggle" class="player-toggle glass-button" type="button" aria-expanded="false" aria-controls="playerPanel">
-      <span>♪</span><span>Pujō Mood</span><span class="toggle-chevron">⌄</span>
-    </button>
-    <div id="playerPanel" class="youtube-player" id="youtubePlayer"></div>
+        <div class="youtube-player" id="youtubePlayer"></div>
 
         <div class="yt-controls" aria-label="Playlist controls">
           <button type="button" class="yt-btn" id="ytPrev" title="Previous video" aria-label="Previous video">⏮</button>
@@ -99,11 +96,16 @@
     </section>
   </div>
 
-    <section class="seo-content" aria-labelledby="utsav-about-title">
+    <section class="seo-content seo-collapsed" aria-labelledby="utsav-about-title">
+  <details>
+    <summary>Utsav Festival Information</summary>
+    <div class="seo-body">
       <h2 id="utsav-about-title">Utsav Festival Countdown 2026</h2>
       <p>Utsav brings the <strong>Durga Puja countdown</strong>, <strong>Kali Puja countdown</strong> and <strong>Diwali countdown</strong> together in one live festival experience. The timer updates in real time and the music player lets you enjoy a festive playlist while you wait.</p>
       <div class="festival-links"><a href="/durga-puja-countdown/">Durga Puja Countdown 2026</a><a href="/kali-puja-countdown/">Kali Puja Countdown 2026</a><a href="/diwali-countdown/">Diwali Countdown 2026</a></div>
-    </section>
+    </div>
+  </details>
+</section>
 
   <div class="playlist-modal" id="playlistModal" hidden>
     <button class="modal-backdrop" id="closeByBackdrop" type="button" aria-label="Close playlist"></button>

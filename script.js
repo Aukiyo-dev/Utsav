@@ -7,64 +7,87 @@ let selected=(location.pathname.includes("/kali-puja-countdown/")?"kali":locatio
 const $=s=>document.querySelector(s);
 
 let celebrationShown={durga:false,kali:false,diwali:false};
+
 const FESTIVE_MESSAGES={
   50:(name)=>`${name} is getting closer. There’s still a little time — enjoy the playlist and set the mood.`,
-  20:(name)=>`Time to get excited. ${name} is at the doorstep — start your preparations.`,
+  20:(name)=>`Start getting ready. ${name} is at the doorstep — your preparations can begin.`,
   10:(name)=>`${name} is knocking on your door. Start your preparations now.`,
   2:(name)=>`Just 2 days to go. ${name} is almost here — let the celebration begin.`,
   1:(name)=>`Tomorrow is the day. One more sleep until ${name}. ✨`
 };
+
 function showFestivalMessage(text,hidden=false){
- const el=$("#festivalMessage"); if(!el)return;
- el.textContent=text; el.hidden=hidden;
+  const el=$("#festivalMessage");
+  if(!el)return;
+  el.textContent=text||"";
+  el.hidden=hidden;
 }
+
 function triggerCelebration(){
- if(celebrationShown[selected])return;
- celebrationShown[selected]=true;
- document.body.classList.add("festival-arrived");
- const layer=document.createElement("div");
- layer.className="celebration-sprinkles";
- layer.setAttribute("aria-hidden","true");
- for(let i=0;i<90;i++){
-   const piece=document.createElement("i");
-   piece.style.left=(Math.random()*100)+"%";
-   piece.style.animationDelay=(Math.random()*1.4)+"s";
-   piece.style.animationDuration=(2.2+Math.random()*2.3)+"s";
-   piece.style.transform=`rotate(${Math.random()*360}deg)`;
-   layer.appendChild(piece);
- }
- document.body.appendChild(layer);
- setTimeout(()=>layer.remove(),6500);
+  if(celebrationShown[selected])return;
+  celebrationShown[selected]=true;
+  document.body.classList.add("festival-arrived");
+
+  const layer=document.createElement("div");
+  layer.className="celebration-sprinkles";
+  layer.setAttribute("aria-hidden","true");
+
+  for(let i=0;i<100;i++){
+    const piece=document.createElement("i");
+    piece.style.left=(Math.random()*100)+"%";
+    piece.style.animationDelay=(Math.random()*1.5)+"s";
+    piece.style.animationDuration=(2.2+Math.random()*2.3)+"s";
+    piece.style.transform=`rotate(${Math.random()*360}deg)`;
+    layer.appendChild(piece);
+  }
+
+  document.body.appendChild(layer);
+  setTimeout(()=>layer.remove(),7000);
 }
+
 function updateCountdown(){
- const f=FESTIVALS[selected];
- const diff=new Date(f.target).getTime()-Date.now();
- if(diff<=0){
-   ["days","hours","minutes","seconds"].forEach(id=>$("#"+id).textContent="00");
-   const box=$(".countdown");
-   if(box){
-     box.classList.add("arrived");
-     box.innerHTML='<div class="countdown-arrived">See you next year ✨</div>';
-   }
-   showFestivalMessage(`Happy ${f.name}! The celebration has arrived.`,false);
-   triggerCelebration();
-   return;
- }
- const t=Math.floor(diff/1000);
- const days=Math.floor(t/86400);
- $("#days").textContent=String(days).padStart(2,"0");
- $("#hours").textContent=String(Math.floor(t%86400/3600)).padStart(2,"0");
- $("#minutes").textContent=String(Math.floor(t%3600/60)).padStart(2,"0");
- $("#seconds").textContent=String(t%60).padStart(2,"0");
- const hoursTotal=diff/3600000;
- let msg=null;
- if(days<=1) msg=FESTIVE_MESSAGES[1](f.name);
- else if(days<=2) msg=FESTIVE_MESSAGES[2](f.name);
- else if(days<=10) msg=FESTIVE_MESSAGES[10](f.name);
- else if(days<=20) msg=FESTIVE_MESSAGES[20](f.name);
- else if(days<=50) msg=FESTIVE_MESSAGES[50](f.name);
- showFestivalMessage(msg||"",!msg);
- const box=$(".countdown"); if(box)box.classList.remove("arrived");
+  const f=FESTIVALS[selected];
+  const diff=Math.max(0,new Date(f.target).getTime()-Date.now());
+
+  if(diff<=0){
+    ["days","hours","minutes","seconds"].forEach(id=>{
+      const el=$("#"+id);
+      if(el)el.textContent="00";
+    });
+
+    const box=$(".countdown");
+    if(box){
+      box.classList.add("arrived");
+      box.innerHTML='<div class="countdown-arrived">See you next year ✨</div>';
+    }
+
+    showFestivalMessage(`Happy ${f.name}! The celebration has arrived.`,false);
+    triggerCelebration();
+    return;
+  }
+
+  const t=Math.floor(diff/1000);
+  const days=Math.floor(t/86400);
+  const hours=Math.floor((t%86400)/3600);
+  const minutes=Math.floor((t%3600)/60);
+  const seconds=t%60;
+
+  $("#days").textContent=String(days).padStart(2,"0");
+  $("#hours").textContent=String(hours).padStart(2,"0");
+  $("#minutes").textContent=String(minutes).padStart(2,"0");
+  $("#seconds").textContent=String(seconds).padStart(2,"0");
+
+  let msg=null;
+  if(days<=1) msg=FESTIVE_MESSAGES[1](f.name);
+  else if(days<=2) msg=FESTIVE_MESSAGES[2](f.name);
+  else if(days<=10) msg=FESTIVE_MESSAGES[10](f.name);
+  else if(days<=20) msg=FESTIVE_MESSAGES[20](f.name);
+  else if(days<=50) msg=FESTIVE_MESSAGES[50](f.name);
+
+  showFestivalMessage(msg,!msg);
+
+  const box=$(".countdown");
+  if(box)box.classList.remove("arrived");
 }
 
 function renderFestival(){
@@ -75,20 +98,7 @@ function renderFestival(){
  $("#festivalMark").textContent=f.mark;$("#festivalTitle").textContent=f.name;
  $("#festivalSubtitle").textContent=f.subtitle;$("#targetDate").textContent=f.date;
  $("#playlistName").textContent=f.name;$("#scene").style.backgroundImage=`url("${f.background}")`;
- 
-const playerToggle = document.getElementById("playerToggle");
-const playerPanel = document.getElementById("playerPanel");
-if(playerToggle && playerPanel){
-  playerToggle.addEventListener("click",()=>{
-    const open = playerToggle.getAttribute("aria-expanded")==="true";
-    playerToggle.setAttribute("aria-expanded", String(!open));
-    playerPanel.classList.toggle("is-open", !open);
-    playerToggle.querySelector("span:nth-child(2)").textContent =
-      open ? "Show Pujō Mood Player" : "Hide Pujō Mood Player";
-  });
-}
-
-document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.festival===selected));
+ document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.festival===selected));
  createYouTubePlayer("youtubePlayer",f.playlistId,185,false);
 }
 function loadYTAPI(){
@@ -286,32 +296,3 @@ document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{sel
 $("#openPlaylist").addEventListener("click",openPlaylist);$("#closePlaylist").addEventListener("click",closePlaylist);$("#closeByBackdrop").addEventListener("click",closePlaylist);
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#playlistModal").hidden)closePlaylist();});
 renderFestival();updateCountdown();setInterval(updateCountdown,1000);
-
-
-/* Compact SEO information cards: collapsed visually by default, content remains
-   in the DOM for search engines and expands on tap. */
-document.querySelectorAll("[data-seo-card]").forEach(card=>{
-  const btn=card.querySelector(".seo-details-toggle");
-  if(!btn) return;
-  btn.addEventListener("click",()=>{
-    const open=card.classList.toggle("is-open");
-    btn.setAttribute("aria-expanded",String(open));
-  });
-});
-
-/* Mini player control delegates to the existing player control when available. */
-const miniPlayPause=document.getElementById("miniPlayPause");
-if(miniPlayPause){
-  miniPlayPause.addEventListener("click",()=>{
-    const candidates=[
-      document.querySelector("#playPause"),
-      document.querySelector("[data-play-pause]"),
-      document.querySelector(".play-pause")
-    ].filter(Boolean);
-    if(candidates[0]){
-      candidates[0].click();
-    }
-    miniPlayPause.textContent = miniPlayPause.textContent==="▶" ? "Ⅱ" : "▶";
-    miniPlayPause.setAttribute("aria-label",miniPlayPause.textContent==="Ⅱ" ? "Pause festival music" : "Play festival music");
-  });
-}

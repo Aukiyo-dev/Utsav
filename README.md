@@ -80,5 +80,5 @@ Dedicated crawlable landing URLs now exist for Durga Puja, Kali Puja and Diwali 
 The three dedicated festival SEO pages are retained. Shared CSS/JS/image references use root-absolute paths so switching between festival pages does not break styling.
 
 
-## Image path fix
-Festival backgrounds now use `/assets/...` root-relative paths, so they load correctly on the homepage and on nested SEO routes such as `/kali-puja-countdown/`.
+## Latest UI update
+The YouTube player is always available and is not collapsible. SEO information is presented as a compact native disclosure button; the SEO copy remains in the page HTML and can be expanded by the visitor.
