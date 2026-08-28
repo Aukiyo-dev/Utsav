@@ -317,3 +317,31 @@ button{font:inherit}
 @media(max-width:700px){
   .youtube-playlist-link{margin:0 9px 10px;min-height:38px;font-size:.52rem}
 }
+
+.playlist-items{
+  margin:0 13px 13px;max-height:420px;overflow:auto;
+  border:1px solid rgba(255,255,255,.11);border-radius:15px;
+  background:rgba(0,0,0,.18);
+}
+.playlist-loading,.playlist-error{
+  padding:18px;text-align:center;color:rgba(255,255,255,.58);font-size:.7rem
+}
+.playlist-row{
+  width:100%;display:grid;grid-template-columns:34px 64px 1fr;
+  gap:10px;align-items:center;padding:9px;border:0;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  background:transparent;color:#fff;text-align:left;cursor:pointer
+}
+.playlist-row:last-child{border-bottom:0}
+.playlist-row:hover,.playlist-row.active{background:rgba(255,255,255,.1)}
+.playlist-number{font-size:.65rem;color:rgba(255,255,255,.45);text-align:center}
+.playlist-thumb{width:64px;height:40px;object-fit:cover;border-radius:7px;background:#222}
+.playlist-title{font-size:.67rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.playlist-channel{margin-top:3px;font-size:.54rem;color:rgba(255,255,255,.48);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:700px){
+ .playlist-items{margin:0 9px 9px;max-height:390px}
+ .playlist-row{grid-template-columns:28px 58px 1fr;gap:8px;padding:8px}
+ .playlist-thumb{width:58px;height:37px}
+ .playlist-title{font-size:.62rem}
+ .playlist-channel{font-size:.5rem}
+}

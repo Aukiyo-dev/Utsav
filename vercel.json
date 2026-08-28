@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/playlist.js": {
+      "maxDuration": 10
+    }
+  }
+}
