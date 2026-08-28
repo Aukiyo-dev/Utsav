@@ -57,6 +57,7 @@
         <div class="time"><strong id="minutes">00</strong><span>MINUTES</span></div><i></i>
         <div class="time"><strong id="seconds">00</strong><span>SECONDS</span></div>
       </div>
+      <div class="festival-message" id="festivalMessage" aria-live="polite" hidden></div>
       <p class="date" id="targetDate">Sunday, 8 November 2026</p>
     </section>
 
@@ -96,21 +97,20 @@
     </section>
   </div>
 
-    <section class="seo-content" aria-labelledby="festival-seo-title"><section class="seo-details-card" data-seo-card>
-  <button class="seo-details-toggle" type="button" aria-expanded="false">
-    <span>Kali Puja Countdown 2026</span><span class="seo-chevron">⌄</span>
-  </button>
-  <div class="seo-details-content">
-    <h2 id="festival-seo-title">Kali Puja Countdown 2026</h2><p>Track the live Kali Puja countdown on Utsav. The timer updates in real time toward Kali Puja on Sunday, 8 November 2026. Enjoy the Kali Puja YouTube playlist and explore the other festival countdowns.</p><div class="festival-links"><a href="/durga-puja-countdown/">Durga Puja Countdown</a><a href="/kali-puja-countdown/">Kali Puja Countdown</a><a href="/diwali-countdown/">Diwali Countdown</a></div></section>
+    <section class="seo-content seo-collapsed" aria-labelledby="festival-seo-title">
+  <details>
+    <summary>Kali Puja Countdown Information</summary>
+    <div class="seo-body">
+      <h2 id="festival-seo-title">Kali Puja Countdown 2026</h2><p>Track the live Kali Puja countdown on Utsav. The timer updates in real time toward Kali Puja on Sunday, 8 November 2026. Enjoy the Kali Puja YouTube playlist and explore the other festival countdowns.</p><div class="festival-links"><a href="/durga-puja-countdown/">Durga Puja Countdown</a><a href="/kali-puja-countdown/">Kali Puja Countdown</a><a href="/diwali-countdown/">Diwali Countdown</a></div>
+    </div>
+  </details>
+</section>
 
   <div class="playlist-modal" id="playlistModal" hidden>
     <button class="modal-backdrop" id="closeByBackdrop" type="button" aria-label="Close playlist"></button>
     <section class="playlist-sheet glass" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <header class="modal-header">
-        <div><small>PLAYLIST</small>
-  </div>
-</section>
-<h2 id="modalTitle">Durga Puja</h2></div>
+        <div><small>PLAYLIST</small><h2 id="modalTitle">Durga Puja</h2></div>
         <button class="close glass-button" id="closePlaylist" type="button" aria-label="Close">×</button>
       </header>
       <p class="modal-description">All songs in the selected festival playlist.</p>
