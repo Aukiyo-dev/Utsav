@@ -70,3 +70,7 @@ The Full Playlist button now opens Utsav's own scrollable song list. It does not
 
 ## Loading fix
 The playlist list now has a 12-second timeout and a visible error state instead of remaining on "Loading all songs…" forever. The frontend also correctly escapes playlist titles and handles Vercel's request query format.
+
+
+## SEO structure
+Dedicated crawlable landing URLs now exist for Durga Puja, Kali Puja and Diwali countdown searches, with unique metadata, canonical URLs, JSON-LD WebPage/WebSite markup, internal links and an updated sitemap.

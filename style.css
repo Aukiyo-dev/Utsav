@@ -389,3 +389,20 @@ button{font:inherit}
 @keyframes utsavPulse{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
 .playlist-error{line-height:1.45}
 .playlist-error small{color:rgba(255,255,255,.42)}
+
+.tab{display:flex;align-items:center;justify-content:center;text-decoration:none;color:inherit;}
+.seo-content{max-width:900px;margin:20px auto 40px;padding:22px 24px;border:1px solid rgba(255,255,255,.12);border-radius:20px;background:rgba(12,12,16,.42);backdrop-filter:blur(14px);color:rgba(255,255,255,.78);}
+.seo-content h2{margin:0 0 10px;color:#fff;font-size:clamp(1.05rem,2vw,1.5rem);}
+.seo-content p{margin:0;line-height:1.7;font-size:.78rem;}
+.festival-links{display:flex;flex-wrap:wrap;gap:9px;margin-top:15px;}
+.festival-links a{color:#fff;text-decoration:none;padding:9px 12px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);font-size:.65rem;font-weight:800;}
+@media(max-width:700px){.seo-content{margin:14px 12px 28px;padding:17px 16px}.seo-content p{font-size:.68rem}.festival-links{gap:7px}.festival-links a{font-size:.57rem;padding:8px 10px}}
+
+.festival-message{margin:12px auto 0;max-width:720px;padding:9px 15px;border:1px solid rgba(255,255,255,.16);border-radius:999px;background:rgba(255,255,255,.075);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:rgba(255,255,255,.78);font-size:.62rem;font-weight:700;letter-spacing:.01em;line-height:1.45;text-align:center;box-shadow:0 8px 28px rgba(0,0,0,.12)}
+.countdown.arrived{min-height:126px;display:flex;align-items:center;justify-content:center}
+.countdown-arrived{font-size:clamp(1.25rem,4vw,2rem);font-weight:900;letter-spacing:-.03em;color:#fff;text-align:center}
+.celebration-sprinkles{position:fixed;inset:0;z-index:9999;pointer-events:none;overflow:hidden}
+.celebration-sprinkles i{position:absolute;top:-20px;width:7px;height:13px;border-radius:2px;background:rgba(255,255,255,.95);animation:utsavSprinkleFall linear forwards;box-shadow:0 0 8px rgba(255,255,255,.2)}
+.celebration-sprinkles i:nth-child(3n){background:#ffd84d}.celebration-sprinkles i:nth-child(3n+1){background:#ff6b7a}.celebration-sprinkles i:nth-child(4n){background:#7fe7ff}.celebration-sprinkles i:nth-child(5n){background:#c58cff}
+@keyframes utsavSprinkleFall{0%{top:-25px;opacity:0}10%{opacity:1}100%{top:110vh;opacity:.9;transform:translateX(80px) rotate(720deg)}}
+@media(max-width:700px){.festival-message{margin:9px 18px 0;padding:8px 12px;font-size:.55rem}.countdown.arrived{min-height:112px}.countdown-arrived{font-size:1.25rem}}

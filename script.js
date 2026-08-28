@@ -3,20 +3,75 @@ const FESTIVALS={
  kali:{name:"Kali Puja",mark:"02",subtitle:"A night of lights, devotion and celebration.",target:"2026-11-08T00:00:00+05:30",date:"Sunday, 8 November 2026",playlistId:"PLHwvw4RcSUnk",background:"kali-puja.jpg"},
  diwali:{name:"Diwali",mark:"03",subtitle:"The festival of lights is getting closer.",target:"2026-11-08T00:00:00+05:30",date:"Sunday, 8 November 2026",playlistId:"PLVJ3mfjGvnXU",background:"diwali.jpg"}
 };
-let selected="durga",ytPlayer=null,shuffle=false,repeat=false,playlistCache={};
+let selected=(location.pathname.includes("/kali-puja-countdown/")?"kali":location.pathname.includes("/diwali-countdown/")?"diwali":"durga"),ytPlayer=null,shuffle=false,repeat=false,playlistCache={};
 const $=s=>document.querySelector(s);
 
+let celebrationShown={durga:false,kali:false,diwali:false};
+const FESTIVE_MESSAGES={
+  50:(name)=>`${name} is getting closer. There’s still a little time — enjoy the playlist and set the mood.`,
+  20:(name)=>`Time to get excited. ${name} is at the doorstep — start your preparations.`,
+  10:(name)=>`${name} is knocking on your door. Start your preparations now.`,
+  2:(name)=>`Just 2 days to go. ${name} is almost here — let the celebration begin.`,
+  1:(name)=>`Tomorrow is the day. One more sleep until ${name}. ✨`
+};
+function showFestivalMessage(text,hidden=false){
+ const el=$("#festivalMessage"); if(!el)return;
+ el.textContent=text; el.hidden=hidden;
+}
+function triggerCelebration(){
+ if(celebrationShown[selected])return;
+ celebrationShown[selected]=true;
+ document.body.classList.add("festival-arrived");
+ const layer=document.createElement("div");
+ layer.className="celebration-sprinkles";
+ layer.setAttribute("aria-hidden","true");
+ for(let i=0;i<90;i++){
+   const piece=document.createElement("i");
+   piece.style.left=(Math.random()*100)+"%";
+   piece.style.animationDelay=(Math.random()*1.4)+"s";
+   piece.style.animationDuration=(2.2+Math.random()*2.3)+"s";
+   piece.style.transform=`rotate(${Math.random()*360}deg)`;
+   layer.appendChild(piece);
+ }
+ document.body.appendChild(layer);
+ setTimeout(()=>layer.remove(),6500);
+}
 function updateCountdown(){
- const diff=new Date(FESTIVALS[selected].target).getTime()-Date.now();
- if(diff<=0){["days","hours","minutes","seconds"].forEach(id=>$("#"+id).textContent="00");return;}
+ const f=FESTIVALS[selected];
+ const diff=new Date(f.target).getTime()-Date.now();
+ if(diff<=0){
+   ["days","hours","minutes","seconds"].forEach(id=>$("#"+id).textContent="00");
+   const box=$(".countdown");
+   if(box){
+     box.classList.add("arrived");
+     box.innerHTML='<div class="countdown-arrived">See you next year ✨</div>';
+   }
+   showFestivalMessage(`Happy ${f.name}! The celebration has arrived.`,false);
+   triggerCelebration();
+   return;
+ }
  const t=Math.floor(diff/1000);
- $("#days").textContent=String(Math.floor(t/86400));
+ const days=Math.floor(t/86400);
+ $("#days").textContent=String(days).padStart(2,"0");
  $("#hours").textContent=String(Math.floor(t%86400/3600)).padStart(2,"0");
  $("#minutes").textContent=String(Math.floor(t%3600/60)).padStart(2,"0");
  $("#seconds").textContent=String(t%60).padStart(2,"0");
+ const hoursTotal=diff/3600000;
+ let msg=null;
+ if(days<=1) msg=FESTIVE_MESSAGES[1](f.name);
+ else if(days<=2) msg=FESTIVE_MESSAGES[2](f.name);
+ else if(days<=10) msg=FESTIVE_MESSAGES[10](f.name);
+ else if(days<=20) msg=FESTIVE_MESSAGES[20](f.name);
+ else if(days<=50) msg=FESTIVE_MESSAGES[50](f.name);
+ showFestivalMessage(msg||"",!msg);
+ const box=$(".countdown"); if(box)box.classList.remove("arrived");
 }
+
 function renderFestival(){
  const f=FESTIVALS[selected];
+ const countdown=$(".countdown");
+ if(countdown) countdown.innerHTML='<div class="time"><strong id="days">00</strong><span>DAYS</span></div><i></i><div class="time"><strong id="hours">00</strong><span>HOURS</span></div><i></i><div class="time"><strong id="minutes">00</strong><span>MINUTES</span></div><i></i><div class="time"><strong id="seconds">00</strong><span>SECONDS</span></div>';
+ celebrationShown[selected]=false; document.body.classList.remove("festival-arrived");
  $("#festivalMark").textContent=f.mark;$("#festivalTitle").textContent=f.name;
  $("#festivalSubtitle").textContent=f.subtitle;$("#targetDate").textContent=f.date;
  $("#playlistName").textContent=f.name;$("#scene").style.backgroundImage=`url("${f.background}")`;

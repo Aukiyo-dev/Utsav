@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://utsav-ecru.vercel.app/</loc>
-  </url>
+  <url><loc>https://utsav-ecru.vercel.app/</loc></url>
+  <url><loc>https://utsav-ecru.vercel.app/durga-puja-countdown/</loc></url>
+  <url><loc>https://utsav-ecru.vercel.app/kali-puja-countdown/</loc></url>
+  <url><loc>https://utsav-ecru.vercel.app/diwali-countdown/</loc></url>
 </urlset>
