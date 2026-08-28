@@ -46,7 +46,7 @@ function createYouTubePlayer(containerId,playlistId,height){
  if(!window.YT||!window.YT.Player){loadYTAPI();return;}
  new YT.Player(div.id,{
    height:String(height),width:"100%",
-   playerVars:{listType:"playlist",list:playlistId,playsinline:1,rel:0,modestbranding:1},
+   playerVars:{listType:"playlist",list:playlistId,index:0,playsinline:1,rel:0,modestbranding:1,iv_load_policy:3},
    events:{
     onReady:e=>{
       if(containerId==="youtubePlayer"){
@@ -101,7 +101,13 @@ $("#ytRepeat").addEventListener("click",()=>{
 function openPlaylist(){
  const f=FESTIVALS[selected];
  $("#modalTitle").textContent=f.name;
- createYouTubePlayer("modalYoutube",f.playlistId,520);
+ const link=$("#youtubePlaylistLink");
+ if(link){
+   link.href=`https://www.youtube.com/playlist?list=${encodeURIComponent(f.playlistId)}`;
+ }
+ // Re-create the official playlist player in the larger modal.
+ // The player exposes YouTube's playlist queue through its playlist controls.
+ createYouTubePlayer("modalYoutube",f.playlistId,560);
  $("#playlistModal").hidden=false;
  document.body.style.overflow="hidden";
 }

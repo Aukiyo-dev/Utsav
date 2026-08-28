@@ -22,3 +22,7 @@ Features:
 
 Important:
 YouTube controls what can be played inside an embedded player. Some videos can have embedding disabled, and browser autoplay policies can require a tap before playback. The site does not bypass those restrictions.
+
+
+### Full Playlist modal
+The Full Playlist button now opens a larger official YouTube playlist player and also provides a direct **Open full playlist on YouTube** fallback. YouTube controls the playlist UI exposed inside the embedded player; the website does not scrape or recreate YouTube's private playlist data.
