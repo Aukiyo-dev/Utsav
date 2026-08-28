@@ -111,3 +111,166 @@ button{font:inherit}
   .spotify-player iframe{height:136px}
   .seo-intro{font-size:.58rem;margin-bottom:8px}
 }
+
+/* Extra-compact mobile layout */
+@media (max-width: 700px) {
+  .content {
+    width: calc(100% - 24px);
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+
+  .live {
+    min-height: 36px;
+    padding: 0 12px;
+    font-size: .52rem;
+  }
+
+  .hero {
+    margin-top: 12px;
+    margin-bottom: 12px;
+  }
+
+  .festival-mark {
+    font-size: .52rem;
+    margin-bottom: 5px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.45rem, 12vw, 4rem);
+    line-height: .94;
+  }
+
+  .hero > p:not(.date) {
+    margin: 7px 0 11px;
+    font-size: .68rem;
+  }
+
+  .countdown {
+    width: min(100%, 560px);
+    min-height: 82px;
+    padding: 9px 6px;
+    border-radius: 19px;
+  }
+
+  .time strong {
+    font-size: clamp(1.25rem, 6.7vw, 2rem);
+  }
+
+  .time span {
+    margin-top: 5px;
+    font-size: .39rem;
+    letter-spacing: .07em;
+  }
+
+  .countdown i {
+    height: 30px;
+  }
+
+  .date {
+    margin-top: 7px;
+    font-size: .58rem;
+  }
+
+  .seo-intro {
+    font-size: .50rem;
+    line-height: 1.35;
+    margin-bottom: 5px;
+  }
+
+  .tabs {
+    margin-bottom: 7px;
+    padding: 4px;
+    border-radius: 999px;
+  }
+
+  .tab {
+    min-height: 40px;
+  }
+
+  .tab span {
+    font-size: .53rem;
+  }
+
+  .music {
+    padding: 8px;
+    border-radius: 18px;
+  }
+
+  .music-heading {
+    gap: 7px;
+    padding-bottom: 6px;
+  }
+
+  .music-icon {
+    width: 33px;
+    height: 33px;
+    border-radius: 10px;
+    font-size: .95rem;
+  }
+
+  .music-heading small {
+    font-size: .43rem;
+    letter-spacing: .11em;
+  }
+
+  .music-heading h2 {
+    font-size: .76rem;
+  }
+
+  .playlist-button {
+    min-height: 36px;
+    padding: 0 8px;
+    border-radius: 11px;
+    font-size: .51rem;
+  }
+
+  .spotify-player {
+    border-radius: 13px;
+  }
+
+  .spotify-player iframe {
+    height: 122px;
+  }
+}
+
+@media (max-width: 390px) {
+  .hero h1 {
+    font-size: 2.35rem;
+  }
+
+  .hero > p:not(.date) {
+    font-size: .64rem;
+  }
+
+  .countdown {
+    min-height: 76px;
+  }
+
+  .time strong {
+    font-size: 1.22rem;
+  }
+
+  .time span {
+    font-size: .36rem;
+  }
+
+  .tab span {
+    font-size: .50rem;
+  }
+
+  .playlist-button {
+    font-size: 0;
+    min-width: 36px;
+    justify-content: center;
+  }
+
+  .playlist-button span,
+  .playlist-button b {
+    font-size: .9rem;
+  }
+
+  .spotify-player iframe {
+    height: 116px;
+  }
+}

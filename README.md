@@ -66,3 +66,6 @@ Keep these four files together in the root:
 - `durga-puja.jpg`
 - `kali-puja.jpg`
 - `diwali.jpg`
+
+
+Mobile layout was tightened to reduce the hero, countdown, tabs and Spotify player height on small screens while leaving desktop sizing intact.
