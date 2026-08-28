@@ -1,7 +1,7 @@
 const FESTIVALS={
- durga:{name:"Durga Puja",mark:"01",subtitle:"The first Puja day is almost here.",target:"2026-10-16T00:00:00+05:30",date:"Friday, 16 October 2026",playlistId:"PLcEXU5KhRttE",background:"durga-puja.jpg"},
- kali:{name:"Kali Puja",mark:"02",subtitle:"A night of lights, devotion and celebration.",target:"2026-11-08T00:00:00+05:30",date:"Sunday, 8 November 2026",playlistId:"PLHwvw4RcSUnk",background:"kali-puja.jpg"},
- diwali:{name:"Diwali",mark:"03",subtitle:"The festival of lights is getting closer.",target:"2026-11-08T00:00:00+05:30",date:"Sunday, 8 November 2026",playlistId:"PLVJ3mfjGvnXU",background:"diwali.jpg"}
+ durga:{name:"Durga Puja",mark:"01",subtitle:"The first Puja day is almost here.",target:"2026-10-16T00:00:00+05:30",date:"Friday, 16 October 2026",playlistId:"PLcEXU5KhRttE",background:"/durga-puja.jpg"},
+ kali:{name:"Kali Puja",mark:"02",subtitle:"A night of lights, devotion and celebration.",target:"2026-11-08T00:00:00+05:30",date:"Sunday, 8 November 2026",playlistId:"PLHwvw4RcSUnk",background:"/kali-puja.jpg"},
+ diwali:{name:"Diwali",mark:"03",subtitle:"The festival of lights is getting closer.",target:"2026-11-08T00:00:00+05:30",date:"Sunday, 8 November 2026",playlistId:"PLVJ3mfjGvnXU",background:"/diwali.jpg"}
 };
 let selected=(location.pathname.includes("/kali-puja-countdown/")?"kali":location.pathname.includes("/diwali-countdown/")?"diwali":"durga"),ytPlayer=null,shuffle=false,repeat=false,playlistCache={};
 const $=s=>document.querySelector(s);

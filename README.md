@@ -78,3 +78,7 @@ Dedicated crawlable landing URLs now exist for Durga Puja, Kali Puja and Diwali 
 
 ## Navigation fix
 The three dedicated festival SEO pages are retained. Shared CSS/JS/image references use root-absolute paths so switching between festival pages does not break styling.
+
+
+## Image path fix
+Festival backgrounds now use `/assets/...` root-relative paths, so they load correctly on the homepage and on nested SEO routes such as `/kali-puja-countdown/`.
