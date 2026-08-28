@@ -66,3 +66,7 @@ Because the API key was pasted into a chat, rotate/restrict that key in Google C
 
 ## Playlist list behavior
 The Full Playlist button now opens Utsav's own scrollable song list. It does not open an iframe, does not show only the current video's thumbnail, and does not include an external-playlist button. Each item displays its number, thumbnail, title and channel. Tapping an item loads that video into the main Utsav YouTube player.
+
+
+## Loading fix
+The playlist list now has a 12-second timeout and a visible error state instead of remaining on "Loading all songs…" forever. The frontend also correctly escapes playlist titles and handles Vercel's request query format.

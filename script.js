@@ -84,18 +84,46 @@ $("#ytRepeat").addEventListener("click",()=>{repeat=!repeat;syncModes();ytPlayer
 async function getPlaylistItems(playlistId){
  if(playlistCache[playlistId])return playlistCache[playlistId];
 
- const allowed = Object.values(FESTIVALS).some(f=>f.playlistId===playlistId);
- if(!allowed) throw new Error("Playlist is not configured.");
+ if(!Object.values(FESTIVALS).some(f=>f.playlistId===playlistId)){
+   throw new Error("Playlist is not configured.");
+ }
 
- const u = new URL("/api/playlist", window.location.origin);
- u.searchParams.set("playlistId", playlistId);
+ const controller=new AbortController();
+ const timeout=setTimeout(()=>controller.abort(),12000);
 
- const r = await fetch(u, {headers: {"Accept":"application/json"}});
- const d = await r.json().catch(()=>({}));
- if(!r.ok) throw new Error(d.error || "Unable to load the playlist.");
+ try{
+   const u=new URL("/api/playlist",window.location.origin);
+   u.searchParams.set("playlistId",playlistId);
 
- playlistCache[playlistId] = d.items || [];
- return playlistCache[playlistId];
+   const r=await fetch(u.toString(),{
+     method:"GET",
+     headers:{Accept:"application/json"},
+     cache:"no-store",
+     signal:controller.signal
+   });
+
+   const text=await r.text();
+   let d={};
+   try{d=JSON.parse(text)}catch(_){}
+
+   if(!r.ok){
+     throw new Error(d.error||`Playlist service returned HTTP ${r.status}.`);
+   }
+
+   if(!Array.isArray(d.items)){
+     throw new Error("Playlist service returned an invalid response.");
+   }
+
+   playlistCache[playlistId]=d.items;
+   return d.items;
+ }catch(e){
+   if(e.name==="AbortError"){
+     throw new Error("The playlist took too long to load. Check the Vercel API deployment and try again.");
+   }
+   throw e;
+ }finally{
+   clearTimeout(timeout);
+ }
 }
 
 function renderPlaylistItems(items){
@@ -150,6 +178,11 @@ function renderPlaylistItems(items){
    box.appendChild(b);
  });
 }
+function escapeHTML(v){
+ const d=document.createElement("div");
+ d.textContent=String(v??"");
+ return d.innerHTML;
+}
 function escapeAttr(v){
  return String(v).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
@@ -159,16 +192,20 @@ async function openPlaylist(){
  $("#modalTitle").textContent=f.name;
  $("#playlistModal").hidden=false;
  document.body.style.overflow="hidden";
- $("#playlistItems").innerHTML='<div class="playlist-loading">Loading all songs…</div>';
+
+ const box=$("#playlistItems");
+ box.innerHTML='<div class="playlist-loading"><span class="loading-dot"></span> Loading all songs…</div>';
 
  try{
    const items=await getPlaylistItems(f.playlistId);
    renderPlaylistItems(items);
  }catch(e){
-   $("#playlistItems").innerHTML=
-     `<div class="playlist-error">${escapeHTML(e.message)}<br><br>
-      Check that <strong>api/playlist.js</strong> is in GitHub and
-      <strong>YOUTUBE_DATA_API_KEY</strong> is set in Vercel, then redeploy.</div>`;
+   box.innerHTML=
+    `<div class="playlist-error">
+      <strong>Could not load the playlist.</strong>
+      <br><br>${escapeHTML(e.message)}
+      <br><br><small>Make sure <b>api/playlist.js</b> is committed to GitHub, <b>YOUTUBE_DATA_API_KEY</b> is set in Vercel, and the latest deployment is live.</small>
+    </div>`;
  }
 }
 

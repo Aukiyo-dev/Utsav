@@ -380,3 +380,12 @@ button{font:inherit}
   .playlist-title{font-size:.62rem}
   .playlist-channel{font-size:.49rem}
 }
+
+.loading-dot{
+ display:inline-block;width:7px;height:7px;border-radius:50%;
+ background:rgba(255,255,255,.75);margin-right:7px;
+ animation:utsavPulse 1s ease-in-out infinite;
+}
+@keyframes utsavPulse{0%,100%{opacity:.35;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+.playlist-error{line-height:1.45}
+.playlist-error small{color:rgba(255,255,255,.42)}
