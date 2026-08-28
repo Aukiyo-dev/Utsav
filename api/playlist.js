@@ -67,4 +67,4 @@ export default async function handler(req, res) {
       error: "Unable to load the playlist."
     });
   }
-}
+        }
