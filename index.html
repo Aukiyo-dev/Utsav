@@ -5,17 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#111016">
   <title>Utsav — Durga Puja, Kali Puja & Diwali Countdown</title>
-  <meta name="description" content="Utsav is a live 2026 countdown for Durga Puja, Kali Puja and Diwali, with real-time festival timers, festive backgrounds and Spotify music.">
+  <meta name="description" content="Utsav is a live 2026 countdown for Durga Puja, Kali Puja and Diwali, with real-time festival timers, festive backgrounds and Spotify playlists.">
+  <meta name="author" content="Utsav">
   <meta name="robots" content="index, follow, max-image-preview:large">
-  <link rel="canonical" href="https://utsav-ecru.vercel.app/">
+  <meta name="googlebot" content="index, follow">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Utsav — Durga Puja, Kali Puja & Diwali Countdown">
   <meta property="og:description" content="Live countdowns for Durga Puja, Kali Puja and Diwali with festive music and backgrounds.">
   <meta property="og:site_name" content="Utsav">
-  <link rel="icon" href="durga-puja.jpg">
-
+  <meta property="og:image" content="/assets/durga-puja.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Utsav — Festival Countdown">
+  <meta name="twitter:description" content="Live Durga Puja, Kali Puja and Diwali countdowns.">
+  <link rel="canonical" href="https://utsav-ecru.vercel.app/">
+  <link rel="icon" href="/assets/durga-puja.jpg">
   <link rel="stylesheet" href="style.css">
-  <script src="https://sdk.scdn.co/spotify-player.js"></script>
 </head>
 <body>
 <main class="app" id="app">
@@ -25,7 +29,10 @@
 
   <div class="content">
     <header class="topbar">
-      <div class="glass live"><span class="live-dot"></span><span>LIVE COUNTDOWN</span></div>
+      <div class="glass live">
+        <span class="live-dot"></span>
+        <span>LIVE COUNTDOWN</span>
+      </div>
       <div class="glass year">2026 FESTIVE SEASON</div>
     </header>
 
@@ -34,7 +41,7 @@
       <h1 id="festivalTitle">Durga Puja</h1>
       <p id="festivalSubtitle">The first Puja day is almost here.</p>
 
-      <div class="countdown glass" aria-live="polite">
+      <div class="countdown glass" aria-live="polite" aria-atomic="true">
         <div class="time"><strong id="days">00</strong><span>DAYS</span></div>
         <i></i>
         <div class="time"><strong id="hours">00</strong><span>HOURS</span></div>
@@ -46,47 +53,35 @@
       <p class="date" id="targetDate">Friday, 16 October 2026</p>
     </section>
 
+    <section class="seo-intro" aria-label="About Utsav">
+      <p><strong>Utsav</strong> is a live festival countdown for <strong>Durga Puja</strong>, <strong>Kali Puja</strong> and <strong>Diwali</strong>, with real-time countdowns and festive music.</p>
+    </section>
+
     <section class="lower">
       <nav class="tabs glass" aria-label="Festival">
-        <button class="tab active" type="button" data-festival="durga"><small>01</small><span>Durga Puja</span></button>
-        <button class="tab" type="button" data-festival="kali"><small>02</small><span>Kali Puja</span></button>
-        <button class="tab" type="button" data-festival="diwali"><small>03</small><span>Diwali</span></button>
+        <button class="tab active" type="button" data-festival="durga">
+          <small>01</small><span>Durga Puja</span>
+        </button>
+        <button class="tab" type="button" data-festival="kali">
+          <small>02</small><span>Kali Puja</span>
+        </button>
+        <button class="tab" type="button" data-festival="diwali">
+          <small>03</small><span>Diwali</span>
+        </button>
       </nav>
 
       <section class="music glass">
         <div class="music-heading">
           <div class="music-icon">♫</div>
-          <div class="track-copy">
-            <small id="playerStatus">SPOTIFY WEB PLAYER</small>
-            <h2 id="trackTitle">Connect Spotify to play full songs</h2>
-            <p id="trackArtist">Spotify Premium required for full-song playback.</p>
+          <div>
+            <small>NOW PLAYING / PLAYLIST</small>
+            <h2 id="playlistName">Pujo Mood</h2>
           </div>
-          <button class="login-button glass-button" id="spotifyLogin" type="button">Connect Spotify</button>
+          <button class="playlist-button glass-button" id="openPlaylist" type="button">
+            <span>☷</span> Full playlist <b>↗</b>
+          </button>
         </div>
-
-        <div class="player-art-row">
-          <img id="trackArt" class="track-art" src="durga-puja.jpg" alt="" hidden>
-          <div class="track-progress">
-            <div class="progress-bar"><span id="progressFill"></span></div>
-            <div class="progress-time"><span id="currentTime">0:00</span><span id="trackDuration">0:00</span></div>
-          </div>
-        </div>
-
-        <div class="player-controls">
-          <button type="button" class="player-btn" id="prevBtn" aria-label="Previous track">⏮</button>
-          <button type="button" class="player-btn play" id="playBtn" aria-label="Play" disabled>▶</button>
-          <button type="button" class="player-btn" id="nextBtn" aria-label="Next track">⏭</button>
-          <button type="button" class="mode-btn" id="shuffleBtn" aria-label="Shuffle" aria-pressed="false" disabled>⤨</button>
-          <button type="button" class="mode-btn" id="repeatBtn" aria-label="Repeat" aria-pressed="false" disabled>↻</button>
-        </div>
-
-        <div class="player-note" id="playerNote">
-          Sign in with Spotify Premium to use Utsav's full-song web player.
-        </div>
-      </section>
-
-      <section class="seo-intro" aria-label="About Utsav">
-        <p><strong>Utsav</strong> is a live festival countdown for <strong>Durga Puja</strong>, <strong>Kali Puja</strong> and <strong>Diwali</strong>, with real-time timers and festive music.</p>
+        <div class="spotify-player" id="spotifyPlayer"></div>
       </section>
     </section>
   </div>
@@ -95,18 +90,24 @@
     <button class="modal-backdrop" id="closeByBackdrop" type="button" aria-label="Close playlist"></button>
     <section class="playlist-sheet glass" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
       <header class="modal-header">
-        <div><small>PLAYLIST</small><h2 id="modalTitle">Durga Puja</h2></div>
+        <div>
+          <small>PLAYLISTS</small>
+          <h2 id="modalTitle">Durga Puja</h2>
+        </div>
         <button class="close glass-button" id="closePlaylist" type="button" aria-label="Close">×</button>
       </header>
-      <p class="modal-description">This is the selected Spotify playlist. Full playback is controlled by the connected Spotify Web Player.</p>
-      <div class="playlist-list" id="playlistList">
-        <div class="playlist-loading">Connect Spotify to load playlist tracks.</div>
+
+      <div class="modal-tabs">
+        <button class="modal-tab active" type="button" data-festival="durga">DURGA PUJA</button>
+        <button class="modal-tab" type="button" data-festival="kali">KALI PUJA</button>
+        <button class="modal-tab" type="button" data-festival="diwali">DIWALI</button>
       </div>
+
+      <p class="modal-description" id="modalDescription">The main curated Durga Puja playlist.</p>
+      <div class="modal-spotify" id="modalSpotify"></div>
     </section>
   </div>
 </main>
-
-<script src="spotify-config.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
