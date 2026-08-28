@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://utsav-ecru.vercel.app/sitemap.xml
