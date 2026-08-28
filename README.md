@@ -69,3 +69,7 @@ Keep these four files together in the root:
 
 
 Mobile layout was tightened to reduce the hero, countdown, tabs and Spotify player height on small screens while leaving desktop sizing intact.
+
+
+### Playback controls
+The Spotify embed itself shows the current track and provides Spotify's supported playback controls. The site does not add fake Shuffle/Repeat buttons because Spotify's embedded iframe does not expose reliable external controls for those modes without a separate authenticated Spotify integration. No separate Dhak/sound effect button is included.

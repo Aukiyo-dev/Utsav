@@ -274,3 +274,17 @@ button{font:inherit}
     height: 116px;
   }
 }
+
+/* Compact bottom playlist: edge-to-edge with no dead space */
+.music{overflow:hidden}
+.spotify-player{margin:0 -1px -1px;overflow:hidden}
+@media(max-width:700px){
+  .music{padding:8px 8px 0;margin-bottom:0}
+  .music-heading{padding-bottom:6px}
+  .spotify-player{border-radius:14px 14px 0 0}
+  .spotify-player iframe{height:118px}
+}
+@media(max-width:390px){
+  .spotify-player iframe{height:112px}
+}
+
