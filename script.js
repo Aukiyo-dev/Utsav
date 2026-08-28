@@ -75,7 +75,20 @@ function renderFestival(){
  $("#festivalMark").textContent=f.mark;$("#festivalTitle").textContent=f.name;
  $("#festivalSubtitle").textContent=f.subtitle;$("#targetDate").textContent=f.date;
  $("#playlistName").textContent=f.name;$("#scene").style.backgroundImage=`url("${f.background}")`;
- document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.festival===selected));
+ 
+const playerToggle = document.getElementById("playerToggle");
+const playerPanel = document.getElementById("playerPanel");
+if(playerToggle && playerPanel){
+  playerToggle.addEventListener("click",()=>{
+    const open = playerToggle.getAttribute("aria-expanded")==="true";
+    playerToggle.setAttribute("aria-expanded", String(!open));
+    playerPanel.classList.toggle("is-open", !open);
+    playerToggle.querySelector("span:nth-child(2)").textContent =
+      open ? "Show Pujō Mood Player" : "Hide Pujō Mood Player";
+  });
+}
+
+document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.festival===selected));
  createYouTubePlayer("youtubePlayer",f.playlistId,185,false);
 }
 function loadYTAPI(){
@@ -273,3 +286,32 @@ document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{sel
 $("#openPlaylist").addEventListener("click",openPlaylist);$("#closePlaylist").addEventListener("click",closePlaylist);$("#closeByBackdrop").addEventListener("click",closePlaylist);
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#playlistModal").hidden)closePlaylist();});
 renderFestival();updateCountdown();setInterval(updateCountdown,1000);
+
+
+/* Compact SEO information cards: collapsed visually by default, content remains
+   in the DOM for search engines and expands on tap. */
+document.querySelectorAll("[data-seo-card]").forEach(card=>{
+  const btn=card.querySelector(".seo-details-toggle");
+  if(!btn) return;
+  btn.addEventListener("click",()=>{
+    const open=card.classList.toggle("is-open");
+    btn.setAttribute("aria-expanded",String(open));
+  });
+});
+
+/* Mini player control delegates to the existing player control when available. */
+const miniPlayPause=document.getElementById("miniPlayPause");
+if(miniPlayPause){
+  miniPlayPause.addEventListener("click",()=>{
+    const candidates=[
+      document.querySelector("#playPause"),
+      document.querySelector("[data-play-pause]"),
+      document.querySelector(".play-pause")
+    ].filter(Boolean);
+    if(candidates[0]){
+      candidates[0].click();
+    }
+    miniPlayPause.textContent = miniPlayPause.textContent==="▶" ? "Ⅱ" : "▶";
+    miniPlayPause.setAttribute("aria-label",miniPlayPause.textContent==="Ⅱ" ? "Pause festival music" : "Play festival music");
+  });
+}

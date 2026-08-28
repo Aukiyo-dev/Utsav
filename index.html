@@ -78,7 +78,10 @@
           <button class="playlist-button glass-button" id="openPlaylist" type="button">☷ Full playlist ↗</button>
         </div>
 
-        <div class="youtube-player" id="youtubePlayer"></div>
+        <div class="player-mini-row"><button id="miniPlayPause" class="mini-play glass-button" type="button" aria-label="Play or pause festival music">▶</button><button id="playerToggle" class="player-toggle glass-button" type="button" aria-expanded="false" aria-controls="playerPanel">
+      <span>♪</span><span>Pujō Mood</span><span class="toggle-chevron">⌄</span>
+    </button>
+    <div id="playerPanel" class="youtube-player" id="youtubePlayer"></div>
 
         <div class="yt-controls" aria-label="Playlist controls">
           <button type="button" class="yt-btn" id="ytPrev" title="Previous video" aria-label="Previous video">⏮</button>

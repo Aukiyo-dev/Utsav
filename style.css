@@ -406,3 +406,91 @@ button{font:inherit}
 .celebration-sprinkles i:nth-child(3n){background:#ffd84d}.celebration-sprinkles i:nth-child(3n+1){background:#ff6b7a}.celebration-sprinkles i:nth-child(4n){background:#7fe7ff}.celebration-sprinkles i:nth-child(5n){background:#c58cff}
 @keyframes utsavSprinkleFall{0%{top:-25px;opacity:0}10%{opacity:1}100%{top:110vh;opacity:.9;transform:translateX(80px) rotate(720deg)}}
 @media(max-width:700px){.festival-message{margin:9px 18px 0;padding:8px 12px;font-size:.55rem}.countdown.arrived{min-height:112px}.countdown-arrived{font-size:1.25rem}}
+
+/* Main player starts compact so the festival artwork remains visible.
+   The user can expand it with the small glass button. */
+.player-toggle{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  min-height:42px;
+  margin:10px 0 0;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:14px;
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  font:inherit;
+  font-size:.68rem;
+  font-weight:800;
+  letter-spacing:.02em;
+  cursor:pointer;
+}
+.player-toggle .toggle-chevron{
+  font-size:1rem;
+  line-height:1;
+  transition:transform .2s ease;
+}
+#playerPanel{
+  display:none;
+}
+#playerPanel.is-open{
+  display:block;
+}
+#playerToggle[aria-expanded="true"] .toggle-chevron{
+  transform:rotate(180deg);
+}
+
+/* SEO information stays crawlable but is compact by default. */
+.seo-details-card{
+  margin:18px 0 24px;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:22px;
+  background:rgba(18,18,20,.50);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  overflow:hidden;
+}
+.seo-details-toggle{
+  width:100%;
+  min-height:52px;
+  padding:14px 18px;
+  border:0;
+  background:transparent;
+  color:inherit;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  font:inherit;
+  font-weight:800;
+  cursor:pointer;
+  text-align:left;
+}
+.seo-details-toggle .seo-chevron{transition:transform .2s ease}
+.seo-details-card.is-open .seo-chevron{transform:rotate(180deg)}
+.seo-details-content{
+  display:none;
+  padding:0 18px 18px;
+  border-top:1px solid rgba(255,255,255,.12);
+}
+.seo-details-card.is-open .seo-details-content{display:block}
+.player-mini-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:10px;
+}
+.player-mini-row .player-toggle{margin:0; flex:1}
+.mini-play{
+  width:44px;
+  height:42px;
+  flex:0 0 44px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.18);
+  color:#fff;
+  background:rgba(255,255,255,.10);
+  font-weight:900;
+  cursor:pointer;
+}
