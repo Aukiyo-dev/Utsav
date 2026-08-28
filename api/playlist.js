@@ -6,7 +6,12 @@ const ALLOWED_PLAYLISTS = new Set([
 
 export default async function handler(req, res) {
   try {
-    const playlistId = String(req.query.playlistId || "");
+    const rawQuery = req.query || {};
+    const playlistId = String(
+      rawQuery.playlistId ||
+      new URL(req.url || "", "https://utsav.local").searchParams.get("playlistId") ||
+      ""
+    );
 
     if (!ALLOWED_PLAYLISTS.has(playlistId)) {
       return res.status(400).json({ error: "Playlist is not configured." });
@@ -34,9 +39,12 @@ export default async function handler(req, res) {
       const data = await response.json();
 
       if (!response.ok) {
-        console.error("YouTube API error:", data);
+        console.error("YouTube API error:", {
+          status: response.status,
+          reason: data?.error?.errors?.[0]?.reason || data?.error?.status || "unknown"
+        });
         return res.status(502).json({
-          error: "YouTube playlist service is temporarily unavailable."
+          error: "YouTube could not return this playlist. Check the API key, YouTube Data API v3, and its restrictions in Google Cloud."
         });
       }
 
@@ -67,4 +75,5 @@ export default async function handler(req, res) {
       error: "Unable to load the playlist."
     });
   }
-        }
+}
+  
