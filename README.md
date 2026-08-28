@@ -74,3 +74,7 @@ The playlist list now has a 12-second timeout and a visible error state instead 
 
 ## SEO structure
 Dedicated crawlable landing URLs now exist for Durga Puja, Kali Puja and Diwali countdown searches, with unique metadata, canonical URLs, JSON-LD WebPage/WebSite markup, internal links and an updated sitemap.
+
+
+## Navigation fix
+The three dedicated festival SEO pages are retained. Shared CSS/JS/image references use root-absolute paths so switching between festival pages does not break styling.
