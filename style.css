@@ -277,41 +277,33 @@ button{font:inherit}
 
 .track-copy{min-width:0;flex:1}
 .track-copy p{margin:3px 0 0;color:rgba(255,255,255,.46);font-size:.56rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
-.login-button{min-height:39px;padding:0 12px;border-radius:12px;color:#fff;cursor:pointer;font-size:.58rem;font-weight:800;white-space:nowrap}
-.player-art-row{display:flex;gap:10px;align-items:center;padding:2px 3px 7px}
-.track-art{width:44px;height:44px;border-radius:9px;object-fit:cover;flex:none}
-.track-progress{min-width:0;flex:1}
-.progress-bar{height:4px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden}
-.progress-bar span{display:block;height:100%;width:0;background:rgba(255,255,255,.88);border-radius:inherit}
-.progress-time{display:flex;justify-content:space-between;margin-top:5px;color:rgba(255,255,255,.43);font-size:.48rem;font-weight:700}
-.player-controls{display:flex;align-items:center;justify-content:center;gap:7px;padding:2px 2px 7px}
-.player-btn,.mode-btn{width:38px;height:38px;border:1px solid rgba(255,255,255,.16);border-radius:50%;background:rgba(255,255,255,.08);color:#fff;cursor:pointer;display:grid;place-items:center;font-size:.78rem}
-.player-btn.play{width:44px;height:44px;background:rgba(255,255,255,.9);color:#171318;font-size:.85rem}
-.mode-btn{margin-left:4px;font-size:.9rem}
-.mode-btn.active{background:rgba(255,255,255,.22)}
-.player-btn:disabled,.mode-btn:disabled{opacity:.35;cursor:not-allowed}
-.player-note{padding:5px 4px 7px;text-align:center;color:rgba(255,255,255,.42);font-size:.52rem;font-weight:600}
-.playlist-list{padding:0 14px 14px;max-height:55vh;overflow:auto}
-.playlist-loading{padding:30px 12px;text-align:center;color:rgba(255,255,255,.45);font-size:.7rem}
-.playlist-track{display:flex;align-items:center;gap:10px;padding:9px 5px;border-bottom:1px solid rgba(255,255,255,.08);cursor:pointer}
-.playlist-track:hover{background:rgba(255,255,255,.06)}
-.playlist-track img{width:42px;height:42px;border-radius:8px;object-fit:cover}
-.playlist-track .pt-copy{min-width:0;flex:1}
-.playlist-track strong{display:block;font-size:.67rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.playlist-track span{display:block;margin-top:2px;color:rgba(255,255,255,.46);font-size:.54rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.playlist-track.current{background:rgba(255,255,255,.11);border-radius:9px}
+.playlist-button{margin-left:auto;min-height:39px;padding:0 11px;border-radius:12px;color:#fff;cursor:pointer;font-size:.58rem;font-weight:800;white-space:nowrap}
+.youtube-player{width:100%;overflow:hidden;border-radius:14px 14px 0 0;background:rgba(0,0,0,.18)}
+.youtube-player iframe{display:block;width:100%;height:190px;border:0}
+.yt-controls{display:flex;align-items:center;justify-content:center;gap:7px;padding:7px 3px 4px}
+.yt-btn{width:38px;height:38px;border:1px solid rgba(255,255,255,.16);border-radius:50%;background:rgba(255,255,255,.08);color:#fff;cursor:pointer;display:grid;place-items:center;font-size:.75rem}
+.yt-btn.main{width:44px;height:44px;background:rgba(255,255,255,.9);color:#171318}
+.yt-btn.active{background:rgba(255,255,255,.23)}
+.yt-btn:disabled{opacity:.35;cursor:not-allowed}
+.now-playing{padding:2px 5px 8px;text-align:center;color:rgba(255,255,255,.45);font-size:.52rem;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.modal-youtube{margin:0 13px 13px;border-radius:16px;overflow:hidden}
+.modal-youtube iframe{display:block;width:100%;height:520px;border:0}
 @media(max-width:700px){
-  .music{padding:8px 8px 0;overflow:hidden}
-  .music-heading{padding-bottom:5px}
-  .login-button{min-height:35px;padding:0 9px;font-size:.51rem}
-  .track-art{width:38px;height:38px}
-  .player-btn,.mode-btn{width:34px;height:34px}
-  .player-btn.play{width:40px;height:40px}
-  .player-note{font-size:.47rem;padding-bottom:6px}
+ .music{padding:8px 8px 0;overflow:hidden}
+ .youtube-player{border-radius:12px 12px 0 0}
+ .youtube-player iframe{height:185px}
+ .yt-controls{gap:5px;padding:6px 2px 3px}
+ .yt-btn{width:35px;height:35px;font-size:.68rem}
+ .yt-btn.main{width:40px;height:40px}
+ .now-playing{font-size:.48rem;padding-bottom:6px}
+ .playlist-button{min-height:35px;padding:0 9px;font-size:.51rem}
+ .modal-youtube{margin:0 9px 9px}
+ .modal-youtube iframe{height:520px}
 }
 @media(max-width:390px){
-  .login-button{font-size:0;min-width:36px;padding:0}
-  .login-button::before{content:"↗";font-size:.9rem}
-  .track-copy p{font-size:.49rem}
-  .player-controls{gap:5px}
+ .playlist-button{font-size:0;min-width:36px;justify-content:center}
+ .playlist-button::before{content:"☷";font-size:.9rem}
+ .youtube-player iframe{height:178px}
+ .yt-btn{width:33px;height:33px}
+ .yt-btn.main{width:38px;height:38px}
 }
