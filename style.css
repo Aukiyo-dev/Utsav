@@ -468,3 +468,11 @@ button{font:inherit}
   .seo-content.seo-collapsed summary{min-height:36px;padding:7px 12px;font-size:.52rem}
   .seo-content.seo-collapsed .seo-body{padding:15px 14px}
 }
+
+.seo-content.seo-collapsed .seo-body h3{margin:18px 0 7px;color:#fff;font-size:clamp(.82rem,1.6vw,1.02rem);line-height:1.25}
+.seo-content.seo-collapsed .seo-body ul{margin:8px 0 14px;padding-left:18px;line-height:1.7;font-size:.75rem}
+.seo-content.seo-collapsed .seo-body li{margin:3px 0}
+.seo-content.seo-collapsed .seo-body details{margin:8px 0;border-top:1px solid rgba(255,255,255,.08);padding-top:8px}
+.seo-content.seo-collapsed .seo-body details summary{cursor:pointer;color:#fff;font-weight:750;font-size:.72rem}
+.seo-content.seo-collapsed .seo-body details p{margin:7px 0 0}
+@media(max-width:700px){.seo-content.seo-collapsed .seo-body h3{font-size:.72rem}.seo-content.seo-collapsed .seo-body ul{font-size:.64rem;padding-left:16px}.seo-content.seo-collapsed .seo-body details summary{font-size:.62rem}}
