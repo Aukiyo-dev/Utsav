@@ -476,3 +476,152 @@ button{font:inherit}
 .seo-content.seo-collapsed .seo-body details summary{cursor:pointer;color:#fff;font-weight:750;font-size:.72rem}
 .seo-content.seo-collapsed .seo-body details p{margin:7px 0 0}
 @media(max-width:700px){.seo-content.seo-collapsed .seo-body h3{font-size:.72rem}.seo-content.seo-collapsed .seo-body ul{font-size:.64rem;padding-left:16px}.seo-content.seo-collapsed .seo-body details summary{font-size:.62rem}}
+
+
+/* Mood Mode: keep only the artwork and live countdown visible.
+   The YouTube iframe stays mounted off-screen so audio can continue. */
+.mood-toggle{
+  position:fixed;right:max(14px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom));
+  z-index:1000;min-height:38px;padding:0 13px;border-radius:999px;color:#fff;cursor:pointer;font-size:.62rem;font-weight:800;
+}
+body.mood-mode .topbar,
+body.mood-mode .lower,
+body.mood-mode .seo-content,
+body.mood-mode .festival-mark,
+body.mood-mode #festivalTitle,
+body.mood-mode #festivalSubtitle,
+body.mood-mode #festivalMessage,
+body.mood-mode #targetDate,
+body.mood-mode .mood-toggle,
+body.mood-mode .playlist-modal{display:none!important}
+body.mood-mode .content{width:100%;min-height:100vh;min-height:100svh;padding:0;pointer-events:none}
+body.mood-mode .hero{width:100%;min-height:100vh;min-height:100svh;margin:0;display:flex;align-items:center;justify-content:center}
+body.mood-mode .countdown{width:min(780px,92vw);pointer-events:none}
+body.mood-mode .youtube-player{position:fixed!important;left:-10000px!important;top:0!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important;overflow:hidden!important}
+body.mood-mode .youtube-player iframe{width:1px!important;height:1px!important}
+body.mood-mode .countdown.arrived{min-height:126px}
+body.mood-mode .countdown-arrived{font-size:clamp(1.25rem,4vw,2rem)}
+@media(max-width:700px){
+ body.mood-mode .countdown{width:92vw;min-height:88px;padding:10px 7px;border-radius:20px}
+ body.mood-mode .time strong{font-size:clamp(1.35rem,7.5vw,2.35rem)}
+ body.mood-mode .time span{font-size:.42rem}
+}
+
+
+/* Creator / support actions */
+.creator-actions{
+  position:fixed;
+  top:max(14px,env(safe-area-inset-top));
+  right:max(14px,env(safe-area-inset-right));
+  z-index:1200;
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+.creator-action{
+  min-height:38px;
+  padding:8px 12px;
+  border-radius:999px;
+  color:#fff;
+  border:1px solid rgba(255,255,255,.24);
+  background:rgba(20,18,24,.25);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  cursor:pointer;
+  font-size:.72rem;
+  font-weight:800;
+  white-space:nowrap;
+}
+.creator-action:active{transform:scale(.97)}
+
+.creator-modal[hidden]{display:none}
+.creator-modal{
+  position:fixed;
+  inset:0;
+  z-index:5000;
+  display:grid;
+  place-items:center;
+  padding:20px;
+}
+.creator-backdrop{
+  position:absolute;
+  inset:0;
+  border:0;
+  background:rgba(0,0,0,.58);
+  backdrop-filter:blur(7px);
+  -webkit-backdrop-filter:blur(7px);
+}
+.creator-card,.chai-card{
+  position:relative;
+  z-index:1;
+  width:min(100%,520px);
+  max-height:min(88svh,760px);
+  overflow:auto;
+  padding:28px;
+  border-radius:28px;
+  text-align:center;
+}
+.creator-card h2,.chai-card h2{
+  margin:8px 0 12px;
+  font-size:clamp(1.55rem,5vw,2.2rem);
+}
+.creator-card p,.chai-card p{
+  margin:10px auto;
+  line-height:1.65;
+  color:rgba(255,255,255,.82);
+}
+.creator-kicker{
+  font-size:.65rem;
+  font-weight:800;
+  letter-spacing:.16em;
+  color:rgba(255,255,255,.62);
+}
+.creator-role{
+  margin:18px 0;
+  padding:13px 15px;
+  border-radius:18px;
+  background:rgba(255,255,255,.08);
+}
+.creator-note{
+  margin-top:16px;
+  color:rgba(255,255,255,.68);
+  font-size:.85rem;
+  line-height:1.55;
+}
+.creator-close{
+  position:absolute;
+  top:13px;
+  right:13px;
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  color:#fff;
+  cursor:pointer;
+  font-size:22px;
+}
+.chai-qr{
+  display:block;
+  width:min(68vw,300px);
+  aspect-ratio:1;
+  margin:20px auto 12px;
+  padding:10px;
+  background:#fff;
+  border-radius:18px;
+}
+.upi-id{
+  font-size:.95rem!important;
+}
+.chai-small{
+  font-size:.78rem!important;
+  color:rgba(255,255,255,.62)!important;
+}
+
+/* Mood Mode must hide creator/support controls and modals. */
+body.mood-mode .creator-actions,
+body.mood-mode .creator-modal{display:none!important}
+
+@media (max-width:700px){
+  .creator-actions{gap:5px}
+  .creator-action{padding:7px 9px;font-size:.62rem}
+  .creator-action:nth-child(3){display:none}
+}

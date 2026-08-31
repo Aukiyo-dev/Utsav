@@ -296,3 +296,55 @@ document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{sel
 $("#openPlaylist").addEventListener("click",openPlaylist);$("#closePlaylist").addEventListener("click",closePlaylist);$("#closeByBackdrop").addEventListener("click",closePlaylist);
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#playlistModal").hidden)closePlaylist();});
 renderFestival();updateCountdown();setInterval(updateCountdown,1000);
+
+
+/* Utsav Mood Mode */
+(()=>{
+  const btn=document.getElementById("moodMode");
+  const countdown=document.querySelector(".countdown");
+  if(!btn) return;
+  const setMode=(on)=>{
+    document.body.classList.toggle("mood-mode",on);
+    btn.setAttribute("aria-pressed",String(on));
+    btn.setAttribute("aria-label",on?"Exit mood mode":"Enter mood mode");
+    btn.textContent=on?"× Exit":"✦ Mood";
+    if(on && ytPlayer && typeof ytPlayer.playVideo==="function"){
+      try{ytPlayer.playVideo();}catch(e){}
+    }
+  };
+  btn.addEventListener("click",()=>setMode(!document.body.classList.contains("mood-mode")));
+  document.addEventListener("keydown",e=>{if(e.key==="Escape" && document.body.classList.contains("mood-mode")) setMode(false);});
+  // Double-tap the countdown on mobile to restore the interface after it is hidden.
+  let lastTap=0;
+  countdown?.addEventListener("click",()=>{
+    const now=Date.now();
+    if(document.body.classList.contains("mood-mode") && now-lastTap<350) setMode(false);
+    lastTap=now;
+  });
+})();
+
+
+/* Creator, support and Aukiyo dialogs */
+(() => {
+  const pairs = [
+    ["openCreator","creatorModal","creatorClose","creatorBackdrop"],
+    ["openChai","chaiModal","chaiClose","chaiBackdrop"],
+    ["openAukiyo","aukiyoModal","aukiyoClose","aukiyoBackdrop"]
+  ];
+  pairs.forEach(([openId, modalId, closeId, backdropId]) => {
+    const open=document.getElementById(openId);
+    const modal=document.getElementById(modalId);
+    const close=document.getElementById(closeId);
+    const backdrop=document.getElementById(backdropId);
+    if(!open || !modal) return;
+    const hide=()=>{modal.hidden=true};
+    open.addEventListener("click",()=>{modal.hidden=false});
+    close?.addEventListener("click",hide);
+    backdrop?.addEventListener("click",hide);
+  });
+  document.addEventListener("keydown",(e)=>{
+    if(e.key==="Escape"){
+      document.querySelectorAll(".creator-modal:not([hidden])").forEach(m=>m.hidden=true);
+    }
+  });
+})();
