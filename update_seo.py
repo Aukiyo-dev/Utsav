@@ -163,7 +163,7 @@ def make_head(p):
 {schema}
   </script>
 
-  <link rel="stylesheet" href="/style.css?v=20260901-4">
+  <link rel="stylesheet" href="/style.css?v=20260901-5">
 </head>'''
 
 # Update subpages
@@ -247,7 +247,7 @@ head=f'''<head>
 {json.dumps(home_schema,ensure_ascii=False,indent=2)}
   </script>
 
-  <link rel="stylesheet" href="/style.css?v=20260901-4">
+  <link rel="stylesheet" href="/style.css?v=20260901-5">
 </head>'''
 text=re.sub(r'<head>.*?</head>',head,text,count=1,flags=re.S)
 text=text.replace('<h1 id="festivalTitle">Durga Puja</h1>','<h1 id="festivalTitle">Durga Puja Countdown 2026</h1>')

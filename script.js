@@ -394,6 +394,23 @@ document.addEventListener("keydown",e=>{
   if(e.key==="Escape"&&!$("#playlistModal").hidden)closePlaylist();
 });
 
+/* Reliable top-level SEO disclosure: closed on first load, with explicit toggle state. */
+document.querySelectorAll(".seo-content.seo-collapsed > details").forEach(details=>{
+  details.removeAttribute("open");
+  const summary=details.querySelector(":scope > summary");
+  if(!summary)return;
+  summary.setAttribute("role","button");
+  summary.setAttribute("aria-expanded","false");
+  summary.addEventListener("click",e=>{
+    e.preventDefault();
+    details.open=!details.open;
+    summary.setAttribute("aria-expanded",String(details.open));
+  });
+  details.addEventListener("toggle",()=>{
+    summary.setAttribute("aria-expanded",String(details.open));
+  });
+});
+
 renderFestival();
 updateCountdown();
 setInterval(updateCountdown,1000);

@@ -210,3 +210,36 @@ durga-puja-countdown/index.html
 kali-puja-countdown/index.html
 mahalaya-countdown/index.html
 ```
+
+
+## V6 — Vercel Web Analytics
+
+V6 adds Vercel Web Analytics to all four static HTML pages:
+- `/index.html`
+- `/durga-puja-countdown/index.html`
+- `/kali-puja-countdown/index.html`
+- `/mahalaya-countdown/index.html`
+
+Each page includes the Vercel static HTML analytics bootstrap in `<head>`:
+
+```html
+<script>
+  window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
+```
+
+`package.json` and `package-lock.json` include `@vercel/analytics` 2.0.1 as requested.
+
+### Activation
+Enable **Web Analytics** for the Utsav project in the Vercel dashboard and deploy V6. The analytics script is intended for the static HTML setup. Vercel's HTML Starter also demonstrates the script-tag approach for HTML sites.
+
+### V6 preserves
+- Durga Puja, Kali Puja and Mahalaya as separate festivals
+- Separate playlists for each festival
+- Two separate Mahalaya playlists
+- Mobile and desktop artwork
+- SEO pages, sitemap and structured data
+- SEO fold behavior and playlist modal fixes
+- Mood mode and exit control
+- Creator / Buy Me a Chai / copyable UPI section

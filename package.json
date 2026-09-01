@@ -1,23 +1,9 @@
 {
   "name": "utsav",
   "version": "1.0.0",
-  "description": "Utsav is a crawlable festival countdown site for Durga Puja, Kali Puja and Mahalaya 2026. Each festival has its own landing URL, countdown, artwork and music playlist.",
-  "main": "script.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Aukiyo-dev/Utsav.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Aukiyo-dev/Utsav/issues"
-  },
-  "homepage": "https://github.com/Aukiyo-dev/Utsav#readme",
+  "private": true,
+  "description": "Utsav festival countdown website",
   "dependencies": {
-    "@vercel/analytics": "^2.0.1"
+    "@vercel/analytics": "2.0.1"
   }
 }
