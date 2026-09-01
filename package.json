@@ -1,9 +1,0 @@
-{
-  "name": "utsav",
-  "version": "1.0.0",
-  "private": true,
-  "description": "Utsav festival countdown website",
-  "dependencies": {
-    "@vercel/analytics": "2.0.1"
-  }
-}
