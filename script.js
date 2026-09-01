@@ -46,7 +46,8 @@ function getSelectedFestival(){
 let selected=getSelectedFestival();
 let ytPlayer=null,ytApiLoading=false,shuffle=false,repeat=false,playlistCache={};
 let currentPlaylistId=FESTIVALS[selected].playlistId;
-let currentPlaylistKey="iconic";
+let currentPlaylistKey=selected==="mahalaya"?"iconic":"main";
+let playerGeneration=0;
 const $=s=>document.querySelector(s);
 let celebrationShown={durga:false,kali:false,mahalaya:false};
 
@@ -122,7 +123,7 @@ function resetCountdownMarkup(){
 
 function setPlaylistSelection(key){
   if(selected!=="mahalaya"){
-    currentPlaylistKey="iconic";
+    currentPlaylistKey="main";
     currentPlaylistId=FESTIVALS[selected].playlistId;
     return;
   }
@@ -131,6 +132,7 @@ function setPlaylistSelection(key){
 }
 
 function destroyPlayer(){
+  playerGeneration++;
   if(ytPlayer && typeof ytPlayer.destroy==="function"){
     try{ytPlayer.destroy();}catch(e){}
   }
@@ -147,7 +149,7 @@ function renderFestival(){
   $("#festivalSubtitle").textContent=f.subtitle;
   $("#targetDate").textContent=f.date;
 
-  if(selected!=="mahalaya")setPlaylistSelection("iconic");
+  if(selected!=="mahalaya")setPlaylistSelection("main");
   else setPlaylistSelection(currentPlaylistKey);
 
   $("#playlistName").textContent=selected==="mahalaya"
@@ -199,6 +201,8 @@ function loadYTAPI(){
 }
 
 function createYouTubePlayer(containerId,playlistId,height,isModal=false){
+  const generation=playerGeneration;
+  const expectedPlaylistId=playlistId;
   const c=$("#"+containerId); if(!c)return;
   c.innerHTML="";
   const d=document.createElement("div");
@@ -218,21 +222,21 @@ function createYouTubePlayer(containerId,playlistId,height,isModal=false){
     },
     events:{
       onReady:e=>{
-        if(!isModal){
+        if(!isModal && generation===playerGeneration && expectedPlaylistId===currentPlaylistId){
           ytPlayer=e.target;
           $("#playlistStatus").textContent="YouTube playlist ready • tap play to begin";
           syncModes();
         }
       },
       onStateChange:e=>{
-        if(!isModal){
+        if(!isModal && generation===playerGeneration && expectedPlaylistId===currentPlaylistId){
           const play=$("#ytPlay");
           if(play)play.textContent=e.data===YT.PlayerState.PLAYING?"Ⅱ":"▶";
           updateNowPlaying(e.target);
         }
       },
       onError:()=>{
-        if(!isModal){
+        if(!isModal && generation===playerGeneration && expectedPlaylistId===currentPlaylistId){
           $("#nowPlaying").textContent="This YouTube video may not allow embedding.";
         }
       }
