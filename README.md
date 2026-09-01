@@ -250,3 +250,8 @@ Enable **Web Analytics** for the Utsav project in the Vercel dashboard and deplo
 This static site uses the Vercel Web Analytics script-tag installation. No source file imports `@vercel/analytics`, so npm package metadata is not required.
 
 `package.json` and `package-lock.json` were removed from this deployment to prevent Vercel from attempting `npm install` for an unused analytics package. The analytics script remains in the `<head>` of all four website pages.
+
+
+## V6.1 — AMP alternative pages
+
+Added lightweight AMP representations at `/durga-puja-countdown/amp/`, `/kali-puja-countdown/amp/`, and `/mahalaya-countdown/`. Each AMP document points to its regular canonical page, while each regular page advertises its AMP alternative with `rel="amphtml"`. AMP pages use AMP components instead of the main site JavaScript.
