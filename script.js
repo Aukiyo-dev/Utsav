@@ -255,8 +255,22 @@ function createYouTubePlayer(containerId,playlistId,height,isModal=false){
   return player;
 }
 
+function updateMediaSession(p){
+  if(!('mediaSession' in navigator))return;
+  try{
+    const data=p.getVideoData?.()||{};
+    navigator.mediaSession.metadata=new MediaMetadata({
+      title:data.title||FESTIVALS[selected].playlistName||FESTIVALS[selected].name,
+      artist:'Utsav • '+FESTIVALS[selected].name,
+      album:'Utsav 2026 Festival Music',
+      artwork:[{src:`${location.origin}/utsav-logo.png`,sizes:'192x192',type:'image/png'}]
+    });
+  }catch(e){}
+}
+
 function updateNowPlaying(p){
   try{
+    updateMediaSession(p);
     $("#nowPlaying").textContent="Now playing • "+(p.getVideoData()?.title||"YouTube playlist");
   }catch(e){}
 }
@@ -480,3 +494,21 @@ setInterval(updateCountdown,1000);
     setTimeout(()=>{copyBtn.textContent="Copy";if(status)status.textContent=""},1800);
   });
 })();
+
+
+/* Background playback continuity: never pause the YouTube player merely because the tab/app becomes hidden.
+   Audible autoplay is intentionally not forced because mobile browsers may block it until the user interacts. */
+document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='hidden' && ytPlayer && ytPlayerReady){
+    try{
+      if(ytPlayer.getPlayerState()===YT.PlayerState.PLAYING) document.documentElement.dataset.utsavPlayback='playing';
+    }catch(e){}
+  }
+});
+if('mediaSession' in navigator){
+  const noop=()=>{try{if(ytPlayer)ytPlayer.playVideo()}catch(e){}};
+  try{navigator.mediaSession.setActionHandler('play',noop)}catch(e){}
+  try{navigator.mediaSession.setActionHandler('pause',()=>{try{ytPlayer?.pauseVideo()}catch(e){}})}catch(e){}
+  try{navigator.mediaSession.setActionHandler('nexttrack',()=>{try{ytPlayer?.nextVideo()}catch(e){}})}catch(e){}
+  try{navigator.mediaSession.setActionHandler('previoustrack',()=>{try{ytPlayer?.previousVideo()}catch(e){}})}catch(e){}
+}

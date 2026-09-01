@@ -3,8 +3,21 @@
   "short_name": "Utsav",
   "description": "Live 2026 countdowns for Durga Puja, Kali Puja and Mahalaya.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "theme_color": "#111016",
   "background_color": "#111016",
-  "lang": "en-IN"
+  "lang": "en-IN",
+  "icons": [
+    {
+      "src": "/favicon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }

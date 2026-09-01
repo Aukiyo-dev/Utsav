@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-  <url><loc>https://utsav-countdown.vercel.app/</loc><lastmod>2026-09-01</lastmod><image:image><image:loc>https://utsav-countdown.vercel.app/durga-puja.jpg</image:loc></image:image></url>
-  <url><loc>https://utsav-countdown.vercel.app/durga-puja-countdown/</loc><lastmod>2026-09-01</lastmod><image:image><image:loc>https://utsav-countdown.vercel.app/durga-puja.jpg</image:loc></image:image></url>
-  <url><loc>https://utsav-countdown.vercel.app/kali-puja-countdown/</loc><lastmod>2026-09-01</lastmod><image:image><image:loc>https://utsav-countdown.vercel.app/kali-puja.jpg</image:loc></image:image></url>
-  <url><loc>https://utsav-countdown.vercel.app/mahalaya-countdown/</loc><lastmod>2026-09-01</lastmod><image:image><image:loc>https://utsav-countdown.vercel.app/mahalaya.jpg</image:loc></image:image></url>
+  <url><loc>https://utsav-countdown.vercel.app/</loc><lastmod>2026-09-01</lastmod><image:image><image:loc>https://utsav-countdown.vercel.app/utsav-logo.png</image:loc></image:image><image:image><image:loc>https://utsav-countdown.vercel.app/utsav-share.jpg</image:loc></image:image></url>
+  <url><loc>https://utsav-countdown.vercel.app/durga-puja-countdown/</loc><lastmod>2026-09-01</lastmod><image:image><image:loc>https://utsav-countdown.vercel.app/durga-puja-share.jpg</image:loc></image:image><image:image><image:loc>https://utsav-countdown.vercel.app/utsav-logo.png</image:loc></image:image></url>
+  <url><loc>https://utsav-countdown.vercel.app/kali-puja-countdown/</loc><lastmod>2026-09-01</lastmod><image:image><image:loc>https://utsav-countdown.vercel.app/kali-puja-share.jpg</image:loc></image:image><image:image><image:loc>https://utsav-countdown.vercel.app/utsav-logo.png</image:loc></image:image></url>
+  <url><loc>https://utsav-countdown.vercel.app/mahalaya-countdown/</loc><lastmod>2026-09-01</lastmod><image:image><image:loc>https://utsav-countdown.vercel.app/mahalaya-share.jpg</image:loc></image:image><image:image><image:loc>https://utsav-countdown.vercel.app/utsav-logo.png</image:loc></image:image></url>
   <url><loc>https://utsav-countdown.vercel.app/durga-puja-countdown/amp/</loc></url>
   <url><loc>https://utsav-countdown.vercel.app/kali-puja-countdown/amp/</loc></url>
   <url><loc>https://utsav-countdown.vercel.app/mahalaya-countdown/amp/</loc></url>
