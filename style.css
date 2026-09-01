@@ -13,7 +13,7 @@ body{color:var(--white);font-family:Manrope,DM Sans,sans-serif;overflow-x:hidden
 button{font:inherit}
 .app{position:relative;min-height:100vh;min-height:100svh;isolation:isolate;overflow:hidden}
 .scene,.scene-overlay,.scene-vignette{position:absolute;inset:0}
-.scene{z-index:-4;background-image:var(--desktop-bg);background-position:center;background-size:cover;transition:background-image .35s ease,transform .8s ease}
+.scene{z-index:-4;background-position:center;background-size:cover;transition:background-image .35s ease,transform .8s ease}
 .scene-overlay{z-index:-3;background:linear-gradient(180deg,rgba(8,8,12,.22),rgba(12,9,12,.06) 40%,rgba(8,7,10,.62) 100%),linear-gradient(90deg,rgba(7,6,9,.24),transparent 52%,rgba(7,6,9,.15))}
 .scene-vignette{z-index:-2;box-shadow:inset 0 0 140px rgba(0,0,0,.38);pointer-events:none}
 .content{width:min(100% - 32px,1080px);min-height:100vh;min-height:100svh;margin:auto;padding:22px 0 24px;display:flex;flex-direction:column}
@@ -478,252 +478,70 @@ button{font:inherit}
 @media(max-width:700px){.seo-content.seo-collapsed .seo-body h3{font-size:.72rem}.seo-content.seo-collapsed .seo-body ul{font-size:.64rem;padding-left:16px}.seo-content.seo-collapsed .seo-body details summary{font-size:.62rem}}
 
 
-/* Mood Mode: keep only the artwork and live countdown visible.
-   The YouTube iframe stays mounted off-screen so audio can continue. */
-.mood-toggle{
-  position:fixed;right:max(14px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom));
-  z-index:1000;min-height:38px;padding:0 13px;border-radius:999px;color:#fff;cursor:pointer;font-size:.62rem;font-weight:800;
+/* Utsav creator/support controls */
+.creator-actions{
+  position:fixed;top:max(14px,env(safe-area-inset-top));right:max(14px,env(safe-area-inset-right));
+  z-index:1200;display:flex;align-items:center;gap:7px;
 }
-body.mood-mode .topbar,
-body.mood-mode .lower,
-body.mood-mode .seo-content,
-body.mood-mode .festival-mark,
-body.mood-mode #festivalTitle,
-body.mood-mode #festivalSubtitle,
-body.mood-mode #festivalMessage,
-body.mood-mode #targetDate,
+.creator-action{
+  min-height:38px;padding:8px 12px;border-radius:999px;color:#fff;
+  border:1px solid rgba(255,255,255,.24);background:rgba(20,18,24,.25);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  cursor:pointer;font-size:.72rem;font-weight:800;white-space:nowrap;
+}
+.creator-action:active{transform:scale(.97)}
+.creator-modal[hidden]{display:none}
+.creator-modal{position:fixed;inset:0;z-index:5000;display:grid;place-items:center;padding:20px}
+.creator-backdrop{position:absolute;inset:0;border:0;background:rgba(0,0,0,.58);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+.creator-card,.chai-card{position:relative;z-index:1;width:min(100%,520px);max-height:min(88svh,760px);overflow:auto;padding:28px;border-radius:28px;text-align:center}
+.creator-card h2,.chai-card h2{margin:8px 0 12px;font-size:clamp(1.55rem,5vw,2.2rem)}
+.creator-card p,.chai-card p{margin:10px auto;line-height:1.65;color:rgba(255,255,255,.82)}
+.creator-kicker{font-size:.65rem;font-weight:800;letter-spacing:.16em;color:rgba(255,255,255,.62)}
+.creator-role{margin:18px 0;padding:13px 15px;border-radius:18px;background:rgba(255,255,255,.08)}
+.creator-note{margin-top:15px;color:rgba(255,255,255,.58);font-size:.78rem;line-height:1.5}
+.chai-qr{display:block;width:min(68vw,300px);aspect-ratio:1;margin:20px auto 12px;padding:10px;background:#fff;border-radius:18px}
+.chai-small{font-size:.78rem!important;color:rgba(255,255,255,.62)!important}
+.upi-copy-row{display:flex;align-items:center;gap:8px;width:min(100%,360px);margin:12px auto 4px;padding:8px 9px;border:1px solid rgba(255,255,255,.14);border-radius:13px;background:rgba(255,255,255,.055)}
+.upi-label{color:rgba(255,255,255,.48);font-size:.56rem;font-weight:800;white-space:nowrap}
+.upi-copy-row code{flex:1;min-width:0;color:#fff;font-size:.66rem;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.upi-copy-button{min-height:31px;padding:0 10px;border-radius:9px;color:#fff;cursor:pointer;font-size:.55rem;font-weight:800}
+.upi-copy-status{min-height:14px;margin:3px 0 0!important;color:rgba(255,255,255,.5)!important;font-size:.5rem!important;text-align:center}
 
-body.mood-mode .playlist-modal{display:none!important}
+/* Mood mode */
+.mood-toggle{position:fixed;right:max(14px,env(safe-area-inset-right));bottom:max(14px,env(safe-area-inset-bottom));z-index:1000;min-height:38px;padding:0 13px;border-radius:999px;color:#fff;cursor:pointer;font-size:.62rem;font-weight:800}
+body.mood-mode .topbar,body.mood-mode .lower,body.mood-mode .seo-content,
+body.mood-mode .festival-mark,body.mood-mode #festivalTitle,body.mood-mode #festivalSubtitle,
+body.mood-mode #festivalMessage,body.mood-mode #targetDate,body.mood-mode .playlist-modal{display:none!important}
 body.mood-mode .content{width:100%;min-height:100vh;min-height:100svh;padding:0;pointer-events:none}
 body.mood-mode .hero{width:100%;min-height:100vh;min-height:100svh;margin:0;display:flex;align-items:center;justify-content:center}
 body.mood-mode .countdown{width:min(780px,92vw);pointer-events:none}
 body.mood-mode .youtube-player{position:fixed!important;left:-10000px!important;top:0!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important;overflow:hidden!important}
 body.mood-mode .youtube-player iframe{width:1px!important;height:1px!important}
-body.mood-mode .countdown.arrived{min-height:126px}
-body.mood-mode .countdown-arrived{font-size:clamp(1.25rem,4vw,2rem)}
-@media(max-width:700px){
- body.mood-mode .countdown{width:92vw;min-height:88px;padding:10px 7px;border-radius:20px}
- body.mood-mode .time strong{font-size:clamp(1.35rem,7.5vw,2.35rem)}
- body.mood-mode .time span{font-size:.42rem}
-}
-
-
-/* Creator / support actions */
-.creator-actions{
-  position:fixed;
-  top:max(14px,env(safe-area-inset-top));
-  right:max(14px,env(safe-area-inset-right));
-  z-index:1200;
-  display:flex;
-  align-items:center;
-  gap:7px;
-}
-.creator-action{
-  min-height:38px;
-  padding:8px 12px;
-  border-radius:999px;
-  color:#fff;
-  border:1px solid rgba(255,255,255,.24);
-  background:rgba(20,18,24,.25);
-  backdrop-filter:blur(16px);
-  -webkit-backdrop-filter:blur(16px);
-  cursor:pointer;
-  font-size:.72rem;
-  font-weight:800;
-  white-space:nowrap;
-}
-.creator-action:active{transform:scale(.97)}
-
-.creator-modal[hidden]{display:none}
-.creator-modal{
-  position:fixed;
-  inset:0;
-  z-index:5000;
-  display:grid;
-  place-items:center;
-  padding:20px;
-}
-.creator-backdrop{
-  position:absolute;
-  inset:0;
-  border:0;
-  background:rgba(0,0,0,.58);
-  backdrop-filter:blur(7px);
-  -webkit-backdrop-filter:blur(7px);
-}
-.creator-card,.chai-card{
-  position:relative;
-  z-index:1;
-  width:min(100%,520px);
-  max-height:min(88svh,760px);
-  overflow:auto;
-  padding:28px;
-  border-radius:28px;
-  text-align:center;
-}
-.creator-card h2,.chai-card h2{
-  margin:8px 0 12px;
-  font-size:clamp(1.55rem,5vw,2.2rem);
-}
-.creator-card p,.chai-card p{
-  margin:10px auto;
-  line-height:1.65;
-  color:rgba(255,255,255,.82);
-}
-.creator-kicker{
-  font-size:.65rem;
-  font-weight:800;
-  letter-spacing:.16em;
-  color:rgba(255,255,255,.62);
-}
-.creator-role{
-  margin:18px 0;
-  padding:13px 15px;
-  border-radius:18px;
-  background:rgba(255,255,255,.08);
-}
-.creator-note{
-  margin-top:16px;
-  color:rgba(255,255,255,.68);
-  font-size:.85rem;
-  line-height:1.55;
-}
-.creator-close{
-  position:absolute;
-  top:13px;
-  right:13px;
-  width:38px;
-  height:38px;
-  border-radius:50%;
-  color:#fff;
-  cursor:pointer;
-  font-size:22px;
-}
-.chai-qr{
-  display:block;
-  width:min(68vw,300px);
-  aspect-ratio:1;
-  margin:20px auto 12px;
-  padding:10px;
-  background:#fff;
-  border-radius:18px;
-}
-.upi-id{
-  font-size:.95rem!important;
-}
-.chai-small{
-  font-size:.78rem!important;
-  color:rgba(255,255,255,.62)!important;
-}
-
-/* Mood Mode must hide creator/support controls and modals. */
-body.mood-mode .creator-actions,
+body.mood-mode .mood-toggle{display:flex!important;pointer-events:auto!important}
 body.mood-mode .creator-modal{display:none!important}
 
-@media (max-width:700px){
-  .creator-actions{gap:5px}
-  .creator-action{padding:7px 9px;font-size:.62rem}
-  .creator-action:nth-child(3){display:none}
-}
+/* Hidden YouTube surface, controls remain available */
+.youtube-player{position:absolute!important;width:1px!important;height:1px!important;left:-10000px!important;top:0!important;opacity:0!important;pointer-events:none!important;overflow:hidden!important}
+.youtube-player iframe{width:1px!important;height:1px!important}
 
-/* Festival-specific responsive artwork */
-@media(max-width:700px){
-  .scene{
-    background-image:var(--mobile-bg);
-    background-size:contain;
-    background-position:center center;
-    background-repeat:no-repeat;
-    background-color:#111016;
-  }
-}
-
-/* Mahalaya playlist choices */
-.playlist-choices{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:7px;
-  margin:0 3px 9px;
-}
-.playlist-choice{
-  min-height:46px;
-  border:1px solid rgba(255,255,255,.13);
-  border-radius:13px;
-  padding:7px 10px;
-  background:rgba(255,255,255,.045);
-  color:#fff;
-  text-align:left;
-  cursor:pointer;
-}
+/* Mahalaya playlist selector */
+.playlist-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:0 3px 9px}
+.playlist-choice{min-height:46px;border:1px solid rgba(255,255,255,.13);border-radius:13px;padding:7px 10px;background:rgba(255,255,255,.045);color:#fff;text-align:left;cursor:pointer}
 .playlist-choice span,.playlist-choice small{display:block}
 .playlist-choice span{font-size:.62rem;font-weight:800}
 .playlist-choice small{margin-top:3px;color:rgba(255,255,255,.45);font-size:.49rem;font-weight:650}
 .playlist-choice.active{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.28)}
-@media(max-width:520px){
+
+/* Responsive artwork: full portrait art remains visible; a cover layer fills any aspect-ratio gap. */
+@media(max-width:700px){
+  .scene{
+    background-image:var(--mobile-bg),var(--mobile-bg);
+    background-size:contain,cover;
+    background-position:center center,center center;
+    background-repeat:no-repeat,no-repeat;
+    background-color:#111016;
+  }
+  .creator-actions{gap:5px}
+  .creator-action{padding:7px 9px;font-size:.62rem}
   .playlist-choices{grid-template-columns:1fr}
-}
-
-/* Compact audio-first player: the YouTube iframe remains mounted for playback,
-   but the large video surface is removed from the visual UI. */
-.youtube-player{
-  position:absolute!important;
-  width:1px!important;
-  height:1px!important;
-  left:-10000px!important;
-  top:0!important;
-  opacity:0!important;
-  pointer-events:none!important;
-  overflow:hidden!important;
-}
-.youtube-player iframe{
-  width:1px!important;
-  height:1px!important;
-}
-
-/* Keep the Mood control visible so there is always a clear exit path. */
-body.mood-mode .mood-toggle{display:flex!important}
-body.mood-mode .mood-toggle{pointer-events:auto!important}
-
-/* Copyable UPI block */
-.upi-copy-row{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  width:min(100%,360px);
-  margin:12px auto 4px;
-  padding:8px 9px;
-  border:1px solid rgba(255,255,255,.14);
-  border-radius:13px;
-  background:rgba(255,255,255,.055);
-}
-.upi-label{
-  color:rgba(255,255,255,.48);
-  font-size:.56rem;
-  font-weight:800;
-  white-space:nowrap;
-}
-.upi-copy-row code{
-  flex:1;
-  min-width:0;
-  color:#fff;
-  font-size:.66rem;
-  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-.upi-copy-button{
-  min-height:31px;
-  padding:0 10px;
-  border-radius:9px;
-  color:#fff;
-  cursor:pointer;
-  font-size:.55rem;
-  font-weight:800;
-}
-.upi-copy-status{
-  min-height:14px;
-  margin:3px 0 0!important;
-  color:rgba(255,255,255,.5)!important;
-  font-size:.5rem!important;
-  text-align:center;
 }
