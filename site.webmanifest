@@ -1,8 +1,10 @@
 {
-  "name": "Utsav \u2014 Durga Puja, Kali Puja & Mahalaya Countdown",
+  "name": "Utsav — Durga Puja, Kali Puja & Mahalaya Countdown 2026",
   "short_name": "Utsav",
+  "description": "Live 2026 countdowns for Durga Puja, Kali Puja and Mahalaya.",
   "start_url": "/",
   "display": "standalone",
   "theme_color": "#111016",
-  "background_color": "#111016"
+  "background_color": "#111016",
+  "lang": "en-IN"
 }
