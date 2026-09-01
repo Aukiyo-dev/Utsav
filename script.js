@@ -134,6 +134,7 @@ function setPlaylistSelection(key){
 }
 
 function destroyPlayer(){
+  if(typeof window.UtsavStopSongTips==='function')window.UtsavStopSongTips();
   playerGeneration++;
   ytPlayerReady=false;
   pendingPlayRequest=false;
@@ -228,6 +229,7 @@ function createYouTubePlayer(containerId,playlistId,height,isModal=false){
       onReady:e=>{
         if(!isModal && generation===playerGeneration && expectedPlaylistId===currentPlaylistId){
           ytPlayer=e.target;
+          window.ytPlayerForTips=ytPlayer;
           ytPlayerReady=true;
           $("#playlistStatus").textContent="YouTube playlist ready • tap play to begin";
           syncModes();
@@ -552,7 +554,6 @@ if('mediaSession' in navigator){
    This module is intentionally isolated in script.js so the rest of the site stays unchanged. */
 (()=>{
   const STORAGE_KEY='utsav_help_v1_seen';
-  const PLAY_TIP_KEY='utsav_play_tip_v1_seen';
   const safeGet=(key)=>{try{return localStorage.getItem(key)==='1'}catch(_){return false}};
   const safeSet=(key)=>{try{localStorage.setItem(key,'1')}catch(_){} };
 
@@ -589,6 +590,12 @@ if('mediaSession' in navigator){
     .utsav-help-pulse{animation:utsavHelpPulse 1.8s ease-in-out 2}
     @keyframes utsavTipIn{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
     @keyframes utsavHelpPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}45%{box-shadow:0 0 0 8px rgba(255,255,255,.08)}}
+    .utsav-mood-transition{position:fixed;inset:0;z-index:6000;display:grid;place-items:center;background:rgba(8,7,10,0);backdrop-filter:blur(0);opacity:0;pointer-events:none;transition:opacity .35s ease,background .35s ease,backdrop-filter .35s ease}
+    .utsav-mood-transition.is-visible{opacity:1;background:rgba(8,7,10,.38);backdrop-filter:blur(8px)}
+    .utsav-mood-transition.is-leaving{opacity:0;transition:opacity .45s ease}
+    .utsav-mood-transition-card{display:grid;place-items:center;gap:5px;min-width:190px;padding:18px 22px;border:1px solid rgba(255,255,255,.22);border-radius:22px;background:linear-gradient(145deg,rgba(55,43,39,.94),rgba(24,24,29,.96));color:#fff;box-shadow:0 24px 70px rgba(0,0,0,.42);transform:translateY(12px) scale(.96);transition:transform .45s cubic-bezier(.2,.9,.25,1.15)}
+    .utsav-mood-transition.is-visible .utsav-mood-transition-card{transform:translateY(0) scale(1)}
+    .utsav-mood-transition-card span{font-size:1.15rem}.utsav-mood-transition-card b{font-size:.78rem}.utsav-mood-transition-card small{font-size:.58rem;opacity:.62}
     @media(max-width:520px){.utsav-help-card{border-radius:23px;padding:18px 14px 14px}.utsav-help-card h2{font-size:1.3rem}.utsav-tip{right:16px;left:16px;width:auto}.utsav-tip:after{right:28px}}
   `;
   document.head.appendChild(style);
@@ -640,24 +647,145 @@ if('mediaSession' in navigator){
     setTimeout(()=>openHelp(),650);
   }
 
+  // Repeating in-player guidance: show the manga tip whenever a new song
+  // starts, then repeat it every 60 seconds until the user enters Mood mode.
+  // It is intentionally per-song/per-session rather than a one-time localStorage tip.
   let tip=null;
+  let tipTimer=null;
+  let tipSongId=null;
+  let tipDismissedForSong=false;
+  let moodAutoTimer=null;
+  let moodAutoSongId=null;
+  let moodPlayedSeconds=0;
+  let moodLastPlayerTime=null;
+  let moodAutoTriggered=false;
+
+  const clearTipTimer=()=>{if(tipTimer){clearTimeout(tipTimer);tipTimer=null}};
   const removeTip=()=>{if(tip){tip.remove();tip=null}};
-  const showPlayTip=()=>{
-    if(safeGet(PLAY_TIP_KEY)||document.body.classList.contains('mood-mode'))return;
-    safeSet(PLAY_TIP_KEY);
+  const resetMoodAutoTimer=()=>{
+    moodAutoSongId=null;
+    moodPlayedSeconds=0;
+    moodLastPlayerTime=null;
+    moodAutoTriggered=false;
+  };
+  const clearMoodAutoTimer=()=>{
+    if(moodAutoTimer){clearInterval(moodAutoTimer);moodAutoTimer=null}
+    resetMoodAutoTimer();
+  };
+  const stopSongTips=()=>{clearTipTimer();removeTip();clearMoodAutoTimer()};
+
+  // After five minutes of actual playback without the user entering Mood,
+  // transition into Mood mode automatically. Pauses do not count toward the
+  // five-minute total, and the timer resets for every newly selected song.
+  const startMoodAutoTimer=()=>{
+    if(moodAutoTimer)return;
+    moodAutoTimer=setInterval(()=>{
+      const p=window.ytPlayerForTips;
+      if(!p || document.body.classList.contains('mood-mode') || moodAutoTriggered)return;
+      let state=null, id=null, current=null;
+      try{
+        state=p.getPlayerState?.();
+        id=p.getVideoData?.()?.video_id||null;
+        current=p.getCurrentTime?.();
+      }catch(_){return}
+      if(id && id!==moodAutoSongId){
+        moodAutoSongId=id;
+        moodPlayedSeconds=0;
+        moodLastPlayerTime=null;
+      }
+      if(state!==YT.PlayerState.PLAYING || !Number.isFinite(current))return;
+      if(moodLastPlayerTime!==null){
+        const delta=current-moodLastPlayerTime;
+        // Count only normal forward playback; seeks and track jumps don't
+        // artificially satisfy the five-minute requirement.
+        if(delta>=0 && delta<=2.5)moodPlayedSeconds+=delta;
+      }
+      moodLastPlayerTime=current;
+
+      if(moodPlayedSeconds>=300){
+        moodAutoTriggered=true;
+        clearInterval(moodAutoTimer);
+        moodAutoTimer=null;
+        showAutoMoodTransition();
+      }
+    },1000);
+  };
+
+  const showAutoMoodTransition=()=>{
+    if(document.body.classList.contains('mood-mode'))return;
+    const layer=document.createElement('div');
+    layer.className='utsav-mood-transition';
+    layer.setAttribute('aria-hidden','true');
+    layer.innerHTML='<div class="utsav-mood-transition-card"><span>✦</span><b>Mood is ready</b><small>Entering the immersive experience…</small></div>';
+    document.body.appendChild(layer);
+    requestAnimationFrame(()=>layer.classList.add('is-visible'));
+    setTimeout(()=>{
+      const mood=document.getElementById('moodMode');
+      if(mood && !document.body.classList.contains('mood-mode'))mood.click();
+      layer.classList.add('is-leaving');
+      setTimeout(()=>layer.remove(),500);
+    },900);
+  };
+
+  const scheduleNextTip=()=>{
+    clearTipTimer();
+    if(tipDismissedForSong||document.body.classList.contains('mood-mode'))return;
+    tipTimer=setTimeout(()=>{
+      tipTimer=null;
+      if(tipDismissedForSong||document.body.classList.contains('mood-mode'))return;
+      showPlayTip(false);
+    },60000);
+  };
+
+  const showPlayTip=(newSong=true)=>{
+    if(document.body.classList.contains('mood-mode'))return;
+
+    const p=window.ytPlayerForTips;
+    let songId=null;
+    try{songId=p?.getVideoData?.()?.video_id||null}catch(_){songId=null}
+
+    if(newSong || songId!==tipSongId){
+      tipSongId=songId;
+      tipDismissedForSong=false;
+      clearTipTimer();
+      resetMoodAutoTimer();
+    }
+    if(tipDismissedForSong)return;
+
     removeTip();
     tip=document.createElement('aside');
-    tip.className='utsav-tip';
+    tip.className='utsav-tip manga-left';
     tip.setAttribute('role','status');
-    tip.innerHTML=`<button type="button" class="utsav-tip-close" aria-label="Dismiss tip">×</button><div class="utsav-tip-row"><img class="utsav-tip-avatar" src="/utsav-logo.png" alt=""><div><b>Nice — the music is playing! 🎵</b><p>For a richer experience, try <strong>Mood</strong> ✦. You can also use <strong>Full playlist</strong> to browse every song.</p><span class="utsav-tip-arrow">↘ try Mood next</span></div></div>`;
+    tip.innerHTML=`<button type="button" class="utsav-tip-close" aria-label="Dismiss tip">×</button><div class="utsav-tip-row"><img class="utsav-tip-avatar" src="/utsav-logo.png" alt=""><div><b>🎵 Music is playing!</b><p>Try <strong>Mood</strong> ✦ for a more immersive experience. You can also open <strong>Full playlist</strong> to choose another song.</p><span class="utsav-tip-arrow">↙ try Mood</span></div></div>`;
     document.body.appendChild(tip);
-    tip.querySelector('.utsav-tip-close').addEventListener('click',removeTip);
+    startMoodAutoTimer();
+
+    const dismiss=()=>{
+      tipDismissedForSong=true;
+      stopSongTips();
+    };
+    tip.querySelector('.utsav-tip-close').addEventListener('click',dismiss);
+
     const mood=document.getElementById('moodMode');
     mood?.classList.add('utsav-help-pulse');
     setTimeout(()=>mood?.classList.remove('utsav-help-pulse'),3600);
+
+    // Keep the message unobtrusive; it disappears automatically, but the
+    // one-minute reminder continues for this song unless the user dismisses it.
     setTimeout(()=>{if(tip)removeTip()},9000);
+    scheduleNextTip();
   };
 
-  // Called by the existing YouTube state-change handler when playback actually begins.
-  window.UtsavShowFirstPlayTip=showPlayTip;
+  // The Mood button is the user's explicit acknowledgement of the guidance.
+  const moodButton=document.getElementById('moodMode');
+  moodButton?.addEventListener('click',()=>{
+    // Explicitly entering or leaving Mood means the user has discovered the
+    // control, so stop the automatic five-minute transition for this song.
+    tipDismissedForSong=true;
+    stopSongTips();
+  });
+
+  // Called by the existing YouTube state-change handler when playback begins.
+  // Detecting the video ID means the tip restarts for every newly selected song.
+  window.UtsavShowFirstPlayTip=()=>showPlayTip(false);
 })();
