@@ -1,7 +1,8 @@
 const ALLOWED_PLAYLISTS = new Set([
   "PLcEXU5KhRttE", // Durga Puja
   "PLHwvw4RcSUnk", // Kali Puja
-  "PLVJ3mfjGvnXU"  // Diwali
+  "PLZMOb9zpbEKQ", // Iconic Mahalaya
+  "PLPEyl3dIK7O0"  // Mahalaya Collection
 ]);
 
 export default async function handler(req, res) {
@@ -14,7 +15,7 @@ export default async function handler(req, res) {
     );
 
     if (!ALLOWED_PLAYLISTS.has(playlistId)) {
-      return res.status(400).json({ error: "Playlist is not configured." });
+      return res.status(400).json({ error: "Unknown Utsav playlist ID. The selected playlist is not in the deployed Utsav configuration." });
     }
 
     const apiKey = process.env.YOUTUBE_DATA_API_KEY;
@@ -76,4 +77,3 @@ export default async function handler(req, res) {
     });
   }
 }
-  
