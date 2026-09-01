@@ -23,3 +23,10 @@ Also included:
 - .gitignore
 
 No festival/SEO/player functionality was intentionally removed.
+
+
+## V6 deployment fix
+
+This static site uses the Vercel Web Analytics script-tag installation. No source file imports `@vercel/analytics`, so npm package metadata is not required.
+
+`package.json` and `package-lock.json` were removed from this deployment to prevent Vercel from attempting `npm install` for an unused analytics package. The analytics script remains in the `<head>` of all four website pages.

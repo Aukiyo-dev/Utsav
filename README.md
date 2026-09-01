@@ -229,7 +229,7 @@ Each page includes the Vercel static HTML analytics bootstrap in `<head>`:
 <script defer src="/_vercel/insights/script.js"></script>
 ```
 
-`package.json` and `package-lock.json` include `@vercel/analytics` 2.0.1 as requested.
+Vercel Web Analytics is installed using the static HTML script-tag method; no npm analytics dependency is required.
 
 ### Activation
 Enable **Web Analytics** for the Utsav project in the Vercel dashboard and deploy V6. The analytics script is intended for the static HTML setup. Vercel's HTML Starter also demonstrates the script-tag approach for HTML sites.
@@ -243,3 +243,10 @@ Enable **Web Analytics** for the Utsav project in the Vercel dashboard and deplo
 - SEO fold behavior and playlist modal fixes
 - Mood mode and exit control
 - Creator / Buy Me a Chai / copyable UPI section
+
+
+## V6 deployment fix
+
+This static site uses the Vercel Web Analytics script-tag installation. No source file imports `@vercel/analytics`, so npm package metadata is not required.
+
+`package.json` and `package-lock.json` were removed from this deployment to prevent Vercel from attempting `npm install` for an unused analytics package. The analytics script remains in the `<head>` of all four website pages.
