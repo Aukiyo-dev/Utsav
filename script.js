@@ -588,6 +588,12 @@ if('mediaSession' in navigator){
     .utsav-tip-close{position:absolute;right:8px;top:7px;border:0;background:transparent;color:rgba(255,255,255,.65);font-size:.8rem;cursor:pointer;z-index:2}
     .utsav-tip-arrow{display:inline-block;margin-top:7px;font-size:.55rem;opacity:.45;letter-spacing:.04em}
     .utsav-help-pulse{animation:utsavHelpPulse 1.8s ease-in-out 2}
+    .utsav-mood-auto-transition{position:fixed;inset:0;z-index:4900;display:grid;place-items:center;background:rgba(8,8,12,.42);backdrop-filter:blur(5px);animation:utsavAutoIn .38s ease-out}
+    .utsav-mood-auto-transition.is-leaving{animation:utsavAutoOut .28s ease-in forwards}
+    .utsav-mood-auto-card{display:grid;gap:4px;text-align:center;padding:20px 26px;border:1px solid rgba(255,255,255,.2);border-radius:24px;background:rgba(25,24,29,.94);color:#fff;box-shadow:0 25px 70px rgba(0,0,0,.45)}
+    .utsav-mood-auto-card span{font-size:1.2rem}.utsav-mood-auto-card b{font-size:.95rem}.utsav-mood-auto-card small{font-size:.62rem;opacity:.62}
+    @keyframes utsavAutoIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+    @keyframes utsavAutoOut{from{opacity:1}to{opacity:0}}
     @keyframes utsavTipIn{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
     @keyframes utsavHelpPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}45%{box-shadow:0 0 0 8px rgba(255,255,255,.08)}}
     @media(max-width:520px){.utsav-help-card{border-radius:23px;padding:18px 14px 14px}.utsav-help-card h2{font-size:1.3rem}.utsav-tip{right:16px;left:16px;width:auto}.utsav-tip:after{right:28px}}
@@ -641,40 +647,45 @@ if('mediaSession' in navigator){
     setTimeout(()=>openHelp(),650);
   }
 
-  // Repeating in-player guidance: show the manga tip whenever a new song
-  // starts, then repeat it every 60 seconds until the user enters Mood mode.
-  // It is intentionally per-song/per-session rather than a one-time localStorage tip.
+  // Repeating in-player guidance + automatic Mood transition.
+  // Uses elapsed wall-clock time while the YouTube player is actually PLAYING,
+  // rather than nested setTimeouts. This makes the 60s reminder reliable even
+  // when callbacks are slightly delayed by the browser.
   let tip=null;
   let tipTimer=null;
   let tipSongId=null;
   let tipDismissedForSong=false;
+  let playingStartedAt=0;
+  let accumulatedPlayingMs=0;
+  let lastPlayerState=null;
+  let monitorTimer=null;
+  const TIP_INTERVAL=60000;
+  const AUTO_MOOD_AFTER=120000;
 
   const clearTipTimer=()=>{if(tipTimer){clearTimeout(tipTimer);tipTimer=null}};
   const removeTip=()=>{if(tip){tip.remove();tip=null}};
   const stopSongTips=()=>{clearTipTimer();removeTip()};
 
-  const scheduleNextTip=()=>{
-    clearTipTimer();
-    if(tipDismissedForSong||document.body.classList.contains('mood-mode'))return;
-    tipTimer=setTimeout(()=>{
-      tipTimer=null;
-      if(tipDismissedForSong||document.body.classList.contains('mood-mode'))return;
-      showPlayTip(false);
-    },60000);
+  const getPlayerState=()=>{
+    try{return window.ytPlayerForTips?.getPlayerState?.() ?? null}catch(_){return null}
+  };
+  const getSongId=()=>{
+    try{return window.ytPlayerForTips?.getVideoData?.()?.video_id||null}catch(_){return null}
   };
 
-  const showPlayTip=(newSong=true)=>{
-    if(document.body.classList.contains('mood-mode'))return;
+  const resetSongGuidance=(songId)=>{
+    tipSongId=songId||null;
+    tipDismissedForSong=false;
+    accumulatedPlayingMs=0;
+    playingStartedAt=Date.now();
+    clearTipTimer();
+    removeTip();
+  };
 
-    const p=window.ytPlayerForTips;
-    let songId=null;
-    try{songId=p?.getVideoData?.()?.video_id||null}catch(_){songId=null}
-
-    if(newSong || songId!==tipSongId){
-      tipSongId=songId;
-      tipDismissedForSong=false;
-      clearTipTimer();
-    }
+  const showPlayTip=()=>{
+    if(document.body.classList.contains('mood-mode')||tipDismissedForSong)return;
+    const songId=getSongId();
+    if(songId!==tipSongId)resetSongGuidance(songId);
     if(tipDismissedForSong)return;
 
     removeTip();
@@ -693,27 +704,92 @@ if('mediaSession' in navigator){
     const mood=document.getElementById('moodMode');
     mood?.classList.add('utsav-help-pulse');
     setTimeout(()=>mood?.classList.remove('utsav-help-pulse'),3600);
-
-    // Keep the message unobtrusive; it disappears automatically, but the
-    // one-minute reminder continues for this song unless the user dismisses it.
     setTimeout(()=>{if(tip)removeTip()},9000);
-    scheduleNextTip();
   };
 
-  // The Mood button is the user's explicit acknowledgement of the guidance.
+  const enterMoodAutomatically=()=>{
+    if(tipDismissedForSong||document.body.classList.contains('mood-mode'))return;
+    const mood=document.getElementById('moodMode');
+    if(!mood)return;
+    removeTip();
+    clearTipTimer();
+    const transition=document.createElement('div');
+    transition.className='utsav-mood-auto-transition';
+    transition.setAttribute('role','status');
+    transition.innerHTML='<div class="utsav-mood-auto-card"><span>✦</span><b>Mood is ready</b><small>Entering your immersive countdown…</small></div>';
+    document.body.appendChild(transition);
+    setTimeout(()=>{
+      transition.classList.add('is-leaving');
+      setTimeout(()=>{
+        transition.remove();
+        if(!document.body.classList.contains('mood-mode'))mood.click();
+      },280);
+    },900);
+  };
+
+  let lastTipBoundary=0;
+  const guidanceMonitor=()=>{
+    const now=Date.now();
+    const state=getPlayerState();
+    const songId=getSongId();
+    if(songId && songId!==tipSongId){
+      resetSongGuidance(songId);
+      lastTipBoundary=0;
+    }
+
+    if(state===window.YT?.PlayerState?.PLAYING){
+      if(lastPlayerState!==state)playingStartedAt=now;
+      accumulatedPlayingMs+=Math.max(0,now-playingStartedAt);
+      playingStartedAt=now;
+      lastPlayerState=state;
+
+      if(!tipDismissedForSong && !document.body.classList.contains('mood-mode')){
+        const boundary=Math.floor(accumulatedPlayingMs/TIP_INTERVAL);
+        if(boundary>lastTipBoundary){
+          lastTipBoundary=boundary;
+          showPlayTip();
+        }
+        if(accumulatedPlayingMs>=AUTO_MOOD_AFTER){
+          enterMoodAutomatically();
+          return;
+        }
+      }
+    }else{
+      lastPlayerState=state;
+    }
+  };
+
+  const startGuidanceForCurrentSong=()=>{
+    const songId=getSongId();
+    // Reset only when the actual video changes. A pause/resume event for the
+    // same song must not restart the one-minute reminder or two-minute clock.
+    if(songId!==tipSongId){
+      resetSongGuidance(songId);
+      lastTipBoundary=0;
+      showPlayTip();
+    }else if(!tipDismissedForSong && !tip){
+      // If a browser delayed the first state-change callback, ensure the
+      // initial tip is still visible once playback is confirmed.
+      showPlayTip();
+    }
+    if(!monitorTimer)monitorTimer=setInterval(guidanceMonitor,1000);
+  };
+
   const moodButton=document.getElementById('moodMode');
   moodButton?.addEventListener('click',()=>{
-    if(document.body.classList.contains('mood-mode')){
-      // On exit, don't immediately nag the user again for the same song.
-      tipDismissedForSong=true;
-      stopSongTips();
-    }else{
-      tipDismissedForSong=true;
-      stopSongTips();
+    tipDismissedForSong=true;
+    stopSongTips();
+    if(!document.body.classList.contains('mood-mode')){
+      // Manual entry also cancels the automatic 2-minute transition.
+      accumulatedPlayingMs=0;
+      playingStartedAt=Date.now();
     }
   });
 
   // Called by the existing YouTube state-change handler when playback begins.
-  // Detecting the video ID means the tip restarts for every newly selected song.
-  window.UtsavShowFirstPlayTip=()=>showPlayTip(false);
+  // Every new song starts a fresh guidance clock: immediate tip, then every
+  // 60 seconds, and automatic Mood after 2 minutes of actual playback.
+  window.UtsavShowFirstPlayTip=()=>startGuidanceForCurrentSong();
+  window.UtsavStopSongTips=()=>{tipDismissedForSong=true;stopSongTips();};
+
 })();
