@@ -46,7 +46,7 @@ function getSelectedFestival(){
 }
 
 let selected=getSelectedFestival();
-let ytPlayer=null,ytApiLoading=false,shuffle=false,repeat=false,playlistCache={};
+let ytPlayer=null,ytApiLoading=false,ytPlayerReady=false,pendingPlayRequest=false,shuffle=false,repeat=false,playlistCache={};
 let currentPlaylistId=FESTIVALS[selected].playlistId;
 let currentPlaylistKey=selected==="mahalaya"?"iconic":"main";
 let playerGeneration=0,playlistRequestGeneration=0;
@@ -135,6 +135,8 @@ function setPlaylistSelection(key){
 
 function destroyPlayer(){
   playerGeneration++;
+  ytPlayerReady=false;
+  pendingPlayRequest=false;
   if(ytPlayer && typeof ytPlayer.destroy==="function"){
     try{ytPlayer.destroy();}catch(e){}
   }
@@ -226,8 +228,14 @@ function createYouTubePlayer(containerId,playlistId,height,isModal=false){
       onReady:e=>{
         if(!isModal && generation===playerGeneration && expectedPlaylistId===currentPlaylistId){
           ytPlayer=e.target;
+          ytPlayerReady=true;
           $("#playlistStatus").textContent="YouTube playlist ready • tap play to begin";
           syncModes();
+          // If Play was tapped while YouTube was still loading, execute it now.
+          if(pendingPlayRequest){
+            pendingPlayRequest=false;
+            try{ ytPlayer.playVideo(); }catch(err){}
+          }
         }
       },
       onStateChange:e=>{
@@ -260,7 +268,13 @@ function syncModes(){
 }
 
 $("#ytPlay").addEventListener("click",()=>{
-  if(!ytPlayer)return;
+  // Do not lose the first tap while the YouTube iframe/API is initializing.
+  if(!ytPlayer || !ytPlayerReady){
+    pendingPlayRequest=!pendingPlayRequest;
+    const status=$("#playlistStatus");
+    if(status && !ytPlayerReady)status.textContent="Starting YouTube player…";
+    return;
+  }
   if(ytPlayer.getPlayerState()===YT.PlayerState.PLAYING)ytPlayer.pauseVideo();
   else ytPlayer.playVideo();
 });
