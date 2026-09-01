@@ -82,3 +82,9 @@ The three dedicated festival SEO pages are retained. Shared CSS/JS/image referen
 
 ## Latest UI update
 The YouTube player is always available and is not collapsible. SEO information is presented as a compact native disclosure button; the SEO copy remains in the page HTML and can be expanded by the visitor.
+
+
+## Festival artwork
+- Desktop/mobile artwork is provided for Durga Puja, Kali Puja and Mahalaya.
+- Mahalaya uses two selectable YouTube playlists: Iconic Mahalaya and Mahalaya Collection.
+- The Buy Me a Chai dialog includes a copyable UPI ID block.

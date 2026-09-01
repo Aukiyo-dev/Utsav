@@ -13,7 +13,7 @@ body{color:var(--white);font-family:Manrope,DM Sans,sans-serif;overflow-x:hidden
 button{font:inherit}
 .app{position:relative;min-height:100vh;min-height:100svh;isolation:isolate;overflow:hidden}
 .scene,.scene-overlay,.scene-vignette{position:absolute;inset:0}
-.scene{z-index:-4;background-position:center;background-size:cover;transition:background-image .35s ease,transform .8s ease}
+.scene{z-index:-4;background-image:var(--desktop-bg);background-position:center;background-size:cover;transition:background-image .35s ease,transform .8s ease}
 .scene-overlay{z-index:-3;background:linear-gradient(180deg,rgba(8,8,12,.22),rgba(12,9,12,.06) 40%,rgba(8,7,10,.62) 100%),linear-gradient(90deg,rgba(7,6,9,.24),transparent 52%,rgba(7,6,9,.15))}
 .scene-vignette{z-index:-2;box-shadow:inset 0 0 140px rgba(0,0,0,.38);pointer-events:none}
 .content{width:min(100% - 32px,1080px);min-height:100vh;min-height:100svh;margin:auto;padding:22px 0 24px;display:flex;flex-direction:column}
@@ -492,7 +492,7 @@ body.mood-mode #festivalTitle,
 body.mood-mode #festivalSubtitle,
 body.mood-mode #festivalMessage,
 body.mood-mode #targetDate,
-body.mood-mode .mood-toggle,
+
 body.mood-mode .playlist-modal{display:none!important}
 body.mood-mode .content{width:100%;min-height:100vh;min-height:100svh;padding:0;pointer-events:none}
 body.mood-mode .hero{width:100%;min-height:100vh;min-height:100svh;margin:0;display:flex;align-items:center;justify-content:center}
@@ -624,4 +624,106 @@ body.mood-mode .creator-modal{display:none!important}
   .creator-actions{gap:5px}
   .creator-action{padding:7px 9px;font-size:.62rem}
   .creator-action:nth-child(3){display:none}
+}
+
+/* Festival-specific responsive artwork */
+@media(max-width:700px){
+  .scene{
+    background-image:var(--mobile-bg);
+    background-size:contain;
+    background-position:center center;
+    background-repeat:no-repeat;
+    background-color:#111016;
+  }
+}
+
+/* Mahalaya playlist choices */
+.playlist-choices{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:7px;
+  margin:0 3px 9px;
+}
+.playlist-choice{
+  min-height:46px;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:13px;
+  padding:7px 10px;
+  background:rgba(255,255,255,.045);
+  color:#fff;
+  text-align:left;
+  cursor:pointer;
+}
+.playlist-choice span,.playlist-choice small{display:block}
+.playlist-choice span{font-size:.62rem;font-weight:800}
+.playlist-choice small{margin-top:3px;color:rgba(255,255,255,.45);font-size:.49rem;font-weight:650}
+.playlist-choice.active{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.28)}
+@media(max-width:520px){
+  .playlist-choices{grid-template-columns:1fr}
+}
+
+/* Compact audio-first player: the YouTube iframe remains mounted for playback,
+   but the large video surface is removed from the visual UI. */
+.youtube-player{
+  position:absolute!important;
+  width:1px!important;
+  height:1px!important;
+  left:-10000px!important;
+  top:0!important;
+  opacity:0!important;
+  pointer-events:none!important;
+  overflow:hidden!important;
+}
+.youtube-player iframe{
+  width:1px!important;
+  height:1px!important;
+}
+
+/* Keep the Mood control visible so there is always a clear exit path. */
+body.mood-mode .mood-toggle{display:flex!important}
+body.mood-mode .mood-toggle{pointer-events:auto!important}
+
+/* Copyable UPI block */
+.upi-copy-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  width:min(100%,360px);
+  margin:12px auto 4px;
+  padding:8px 9px;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:13px;
+  background:rgba(255,255,255,.055);
+}
+.upi-label{
+  color:rgba(255,255,255,.48);
+  font-size:.56rem;
+  font-weight:800;
+  white-space:nowrap;
+}
+.upi-copy-row code{
+  flex:1;
+  min-width:0;
+  color:#fff;
+  font-size:.66rem;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.upi-copy-button{
+  min-height:31px;
+  padding:0 10px;
+  border-radius:9px;
+  color:#fff;
+  cursor:pointer;
+  font-size:.55rem;
+  font-weight:800;
+}
+.upi-copy-status{
+  min-height:14px;
+  margin:3px 0 0!important;
+  color:rgba(255,255,255,.5)!important;
+  font-size:.5rem!important;
+  text-align:center;
 }

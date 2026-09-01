@@ -1,12 +1,17 @@
 const FESTIVALS={
- durga:{name:"Durga Puja",mark:"01",subtitle:"The first Puja day is almost here.",target:"2026-10-16T00:00:00+05:30",date:"Friday, 16 October 2026",playlistId:"PLcEXU5KhRttE",background:"/durga-puja.jpg"},
- kali:{name:"Kali Puja",mark:"02",subtitle:"A night of lights, devotion and celebration.",target:"2026-11-08T00:00:00+05:30",date:"Sunday, 8 November 2026",playlistId:"PLHwvw4RcSUnk",background:"/kali-puja.jpg"},
- diwali:{name:"Diwali",mark:"03",subtitle:"The festival of lights is getting closer.",target:"2026-11-08T00:00:00+05:30",date:"Sunday, 8 November 2026",playlistId:"PLVJ3mfjGvnXU",background:"/diwali.jpg"}
+ durga:{name:"Durga Puja",mark:"01",subtitle:"The first Puja day is almost here.",target:"2026-10-16T00:00:00+05:30",date:"Friday, 16 October 2026",playlistId:"PLcEXU5KhRttE",background:"/durga-puja.jpg",mobileBackground:"/durga-puja-mobile.jpg"},
+ kali:{name:"Kali Puja",mark:"02",subtitle:"A night of lights, devotion and celebration.",target:"2026-11-08T00:00:00+05:30",date:"Sunday, 8 November 2026",playlistId:"PLHwvw4RcSUnk",background:"/kali-puja.jpg",mobileBackground:"/kali-puja-mobile.jpg"},
+ mahalaya:{name:"Mahalaya",mark:"03",subtitle:"The sacred Mahalaya morning is getting closer.",target:"2026-10-10T00:00:00+05:30",date:"Saturday, 10 October 2026",playlistId:"PLZMOb9zpbEKQ",background:"/mahalaya.jpg",mobileBackground:"/mahalaya-mobile.jpg",
+   playlists:{
+     iconic:{name:"Iconic Mahalaya",playlistId:"PLZMOb9zpbEKQ"},
+     collection:{name:"Mahalaya Collection",playlistId:"PLPEyl3dIK7O0"}
+   }
+ }
 };
-let selected=(location.pathname.includes("/kali-puja-countdown/")?"kali":location.pathname.includes("/diwali-countdown/")?"diwali":"durga"),ytPlayer=null,shuffle=false,repeat=false,playlistCache={};
+let selected=(location.pathname.includes("/kali-puja-countdown/")?"kali":location.pathname.includes("/mahalaya-countdown/")?"mahalaya":"durga"),ytPlayer=null,shuffle=false,repeat=false,playlistCache={},currentPlaylistId=null,currentPlaylistKey="iconic";
 const $=s=>document.querySelector(s);
 
-let celebrationShown={durga:false,kali:false,diwali:false};
+let celebrationShown={durga:false,kali:false,mahalaya:false};
 
 const FESTIVE_MESSAGES={
   50:(name)=>`${name} is getting closer. There’s still a little time — enjoy the playlist and set the mood.`,
@@ -97,14 +102,41 @@ function renderFestival(){
  celebrationShown[selected]=false; document.body.classList.remove("festival-arrived");
  $("#festivalMark").textContent=f.mark;$("#festivalTitle").textContent=f.name;
  $("#festivalSubtitle").textContent=f.subtitle;$("#targetDate").textContent=f.date;
- $("#playlistName").textContent=f.name;$("#scene").style.backgroundImage=`url("${f.background}")`;
+ $("#playlistName").textContent=f.name;
+ const scene=$("#scene");
+ if(scene){
+   scene.style.setProperty("--desktop-bg",`url("${f.background}")`);
+   scene.style.setProperty("--mobile-bg",`url("${f.mobileBackground||f.background}")`);
+ }
  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.festival===selected));
- createYouTubePlayer("youtubePlayer",f.playlistId,185,false);
+
+ const choiceBox=$("#mahalayaPlaylistChoices");
+ if(choiceBox){
+   const isMahalaya=selected==="mahalaya";
+   choiceBox.hidden=!isMahalaya;
+   if(isMahalaya){
+     const validKeys=["iconic","collection"];
+     if(!validKeys.includes(currentPlaylistKey))currentPlaylistKey="iconic";
+     document.querySelectorAll(".playlist-choice").forEach(b=>{
+       const on=b.dataset.playlist===currentPlaylistKey;
+       b.classList.toggle("active",on);
+       b.setAttribute("aria-pressed",String(on));
+     });
+     currentPlaylistId=f.playlists[currentPlaylistKey].playlistId;
+   }else{
+     currentPlaylistId=f.playlistId;
+   }
+ }
+ if(ytPlayer && typeof ytPlayer.destroy==="function"){
+   try{ytPlayer.destroy();}catch(e){}
+   ytPlayer=null;
+ }
+ createYouTubePlayer("youtubePlayer",currentPlaylistId||f.playlistId,185,false);
 }
 function loadYTAPI(){
- if(window.YT?.Player){createYouTubePlayer("youtubePlayer",FESTIVALS[selected].playlistId,185,false);return;}
+ if(window.YT?.Player){createYouTubePlayer("youtubePlayer",currentPlaylistId||FESTIVALS[selected].playlistId,185,false);return;}
  if(document.getElementById("youtube-api"))return;
- window.onYouTubeIframeAPIReady=()=>createYouTubePlayer("youtubePlayer",FESTIVALS[selected].playlistId,185,false);
+ window.onYouTubeIframeAPIReady=()=>createYouTubePlayer("youtubePlayer",currentPlaylistId||FESTIVALS[selected].playlistId,185,false);
  const s=document.createElement("script");s.id="youtube-api";s.src="https://www.youtube.com/iframe_api";document.head.appendChild(s);
 }
 function createYouTubePlayer(containerId,playlistId,height,isModal=false){
@@ -162,7 +194,7 @@ $("#ytRepeat").addEventListener("click",()=>{repeat=!repeat;syncModes();ytPlayer
 async function getPlaylistItems(playlistId){
  if(playlistCache[playlistId])return playlistCache[playlistId];
 
- if(!Object.values(FESTIVALS).some(f=>f.playlistId===playlistId)){
+ if(!Object.values(FESTIVALS).some(f=>f.playlistId===playlistId) && !Object.values(FESTIVALS).some(f=>f.playlists && Object.values(f.playlists).some(p=>p.playlistId===playlistId))){
    throw new Error("Playlist is not configured.");
  }
 
@@ -275,7 +307,7 @@ async function openPlaylist(){
  box.innerHTML='<div class="playlist-loading"><span class="loading-dot"></span> Loading all songs…</div>';
 
  try{
-   const items=await getPlaylistItems(f.playlistId);
+   const items=await getPlaylistItems(currentPlaylistId||f.playlistId);
    renderPlaylistItems(items);
  }catch(e){
    box.innerHTML=
@@ -292,7 +324,26 @@ function closePlaylist(){
  document.body.style.overflow="";
 }
 
-document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{selected=b.dataset.festival;renderFestival();}));
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{selected=b.dataset.festival; if(selected!=="mahalaya")currentPlaylistKey="iconic"; renderFestival();}));
+
+document.querySelectorAll(".playlist-choice").forEach(b=>b.addEventListener("click",()=>{
+  if(selected!=="mahalaya")return;
+  currentPlaylistKey=b.dataset.playlist;
+  const f=FESTIVALS.mahalaya;
+  currentPlaylistId=f.playlists[currentPlaylistKey].playlistId;
+  document.querySelectorAll(".playlist-choice").forEach(x=>{
+    const on=x.dataset.playlist===currentPlaylistKey;
+    x.classList.toggle("active",on);
+    x.setAttribute("aria-pressed",String(on));
+  });
+  if(ytPlayer && typeof ytPlayer.destroy==="function"){
+    try{ytPlayer.destroy();}catch(e){}
+    ytPlayer=null;
+  }
+  createYouTubePlayer("youtubePlayer",currentPlaylistId,185,false);
+  $("#playlistName").textContent=f.name+" • "+f.playlists[currentPlaylistKey].name;
+  $("#playlistStatus").textContent="Playlist selected • tap play to begin";
+}));
 $("#openPlaylist").addEventListener("click",openPlaylist);$("#closePlaylist").addEventListener("click",closePlaylist);$("#closeByBackdrop").addEventListener("click",closePlaylist);
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#playlistModal").hidden)closePlaylist();});
 renderFestival();updateCountdown();setInterval(updateCountdown,1000);
@@ -346,5 +397,38 @@ renderFestival();updateCountdown();setInterval(updateCountdown,1000);
     if(e.key==="Escape"){
       document.querySelectorAll(".creator-modal:not([hidden])").forEach(m=>m.hidden=true);
     }
+  });
+})();
+
+/* Copyable UPI ID */
+(()=>{
+  const copyBtn=document.getElementById("copyUpi");
+  const value=document.getElementById("upiIdValue");
+  const status=document.getElementById("upiCopyStatus");
+  if(!copyBtn || !value)return;
+  copyBtn.addEventListener("click",async()=>{
+    const text=value.textContent.trim();
+    try{
+      await navigator.clipboard.writeText(text);
+      copyBtn.textContent="Copied!";
+      if(status)status.textContent="UPI ID copied to clipboard.";
+    }catch(e){
+      const area=document.createElement("textarea");
+      area.value=text;
+      area.setAttribute("readonly","");
+      area.style.position="fixed";
+      area.style.opacity="0";
+      document.body.appendChild(area);
+      area.select();
+      try{
+        document.execCommand("copy");
+        copyBtn.textContent="Copied!";
+        if(status)status.textContent="UPI ID copied to clipboard.";
+      }catch(_){
+        if(status)status.textContent="Copy failed — please copy the UPI ID manually.";
+      }
+      area.remove();
+    }
+    setTimeout(()=>{copyBtn.textContent="Copy"; if(status)status.textContent="";},1800);
   });
 })();

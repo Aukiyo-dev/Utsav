@@ -4,23 +4,23 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#111016">
-  <title>Utsav — Durga Puja, Kali Puja & Diwali Countdown 2026</title>
-  <meta name="description" content="Utsav is a live 2026 countdown for Durga Puja, Kali Puja and Diwali with festive backgrounds and YouTube music playlists.">
-  <meta name="keywords" content="Durga Puja countdown, Kali Puja countdown, Diwali countdown, Durga Puja 2026, Kali Puja 2026, Diwali 2026, Utsav">
+  <title>Utsav — Durga Puja, Kali Puja & Mahalaya Countdown 2026</title>
+  <meta name="description" content="Utsav is a live 2026 countdown for Durga Puja, Kali Puja and Mahalaya with festive artwork, real-time timers and nostalgic festive music playlists.">
+  <meta name="keywords" content="Durga Puja countdown, Kali Puja countdown, Mahalaya countdown, Durga Puja 2026, Kali Puja 2026, Mahalaya 2026, Mahalaya date 2026, Mahalaya days left, Utsav">
   <meta name="author" content="Utsav">
   <meta name="application-name" content="Utsav">
   <meta name="apple-mobile-web-app-title" content="Utsav">
   <meta property="og:image" content="https://utsav-countdown.vercel.app/durga-puja.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Utsav — Durga Puja, Kali Puja & Diwali Countdown 2026">
-  <meta name="twitter:description" content="Live 2026 countdowns for Durga Puja, Kali Puja and Diwali, plus festive YouTube music playlists.">
+  <meta name="twitter:title" content="Utsav — Durga Puja, Kali Puja & Mahalaya Countdown 2026">
+  <meta name="twitter:description" content="Live 2026 countdowns for Durga Puja, Kali Puja and Mahalaya, plus festive YouTube music playlists.">
   <meta name="twitter:image" content="https://utsav-countdown.vercel.app/durga-puja.jpg">
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
     "@graph":[
-      {"@type":"WebSite","@id":"https://utsav-countdown.vercel.app/#website","url":"https://utsav-countdown.vercel.app/","name":"Utsav","description":"Live countdowns for Durga Puja, Kali Puja and Diwali."},
-      {"@type":"WebPage","@id":"https://utsav-countdown.vercel.app/#webpage","url":"https://utsav-countdown.vercel.app/","name":"Utsav — Durga Puja, Kali Puja & Diwali Countdown 2026","isPartOf":{"@id":"https://utsav-countdown.vercel.app/#website"},"about":[{"@type":"Thing","name":"Durga Puja"},{"@type":"Thing","name":"Kali Puja"},{"@type":"Thing","name":"Diwali"}]}
+      {"@type":"WebSite","@id":"https://utsav-countdown.vercel.app/#website","url":"https://utsav-countdown.vercel.app/","name":"Utsav","description":"Live countdowns for Durga Puja, Kali Puja and Mahalaya."},
+      {"@type":"WebPage","@id":"https://utsav-countdown.vercel.app/#webpage","url":"https://utsav-countdown.vercel.app/","name":"Utsav — Durga Puja, Kali Puja & Mahalaya Countdown 2026","isPartOf":{"@id":"https://utsav-countdown.vercel.app/#website"},"about":[{"@type":"Thing","name":"Durga Puja"},{"@type":"Thing","name":"Kali Puja"},{"@type":"Thing","name":"Mahalaya"}]}
     ]
   }
   </script>
@@ -28,8 +28,8 @@
   <meta name="robots" content="index, follow, max-image-preview:large">
   <link rel="canonical" href="https://utsav-countdown.vercel.app/">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Utsav — Durga Puja, Kali Puja & Diwali Countdown">
-  <meta property="og:description" content="Live Durga Puja, Kali Puja and Diwali countdowns with festive music.">
+  <meta property="og:title" content="Utsav — Durga Puja, Kali Puja & Mahalaya Countdown">
+  <meta property="og:description" content="Live Durga Puja, Kali Puja and Mahalaya countdowns with festive music.">
   <meta property="og:site_name" content="Utsav">
   <link rel="icon" href="/durga-puja.jpg">
   <link rel="stylesheet" href="/style.css">
@@ -72,7 +72,7 @@
       <nav class="tabs glass" aria-label="Festival">
         <a class="tab active" href="/durga-puja-countdown/" data-festival="durga"><small>01</small><span>Durga Puja</span></a>
         <a class="tab" href="/kali-puja-countdown/" data-festival="kali"><small>02</small><span>Kali Puja</span></a>
-        <a class="tab" href="/diwali-countdown/" data-festival="diwali"><small>03</small><span>Diwali</span></a>
+        <a class="tab" href="/mahalaya-countdown/" data-festival="mahalaya"><small>03</small><span>Mahalaya</span></a>
       </nav>
 
       <section class="music glass">
@@ -84,6 +84,15 @@
             <p id="playlistStatus">Full playlist player • tap play to begin</p>
           </div>
           <button class="playlist-button glass-button" id="openPlaylist" type="button">☷ Full playlist ↗</button>
+        </div>
+
+        <div class="playlist-choices" id="mahalayaPlaylistChoices" hidden aria-label="Choose a Mahalaya playlist">
+          <button type="button" class="playlist-choice active" data-playlist="iconic" aria-pressed="true">
+            <span>Iconic Mahalaya</span><small>Traditional favourites</small>
+          </button>
+          <button type="button" class="playlist-choice" data-playlist="collection" aria-pressed="false">
+            <span>Mahalaya Collection</span><small>More iconic songs</small>
+          </button>
         </div>
 
         <div class="youtube-player" id="youtubePlayer"></div>
@@ -109,8 +118,8 @@
     <summary>Utsav Festival Information</summary>
     <div class="seo-body">
       <h2 id="utsav-about-title">Utsav Festival Countdown 2026</h2>
-      <p>Utsav brings the <strong>Durga Puja countdown</strong>, <strong>Kali Puja countdown</strong> and <strong>Diwali countdown</strong> together in one live festival experience. The timer updates in real time and the music player lets you enjoy a festive playlist while you wait.</p>
-      <div class="festival-links"><a href="/durga-puja-countdown/">Durga Puja Countdown 2026</a><a href="/kali-puja-countdown/">Kali Puja Countdown 2026</a><a href="/diwali-countdown/">Diwali Countdown 2026</a></div>
+      <p>Utsav brings the <strong>Durga Puja countdown</strong>, <strong>Kali Puja countdown</strong> and <strong>Mahalaya countdown</strong> together in one live festival experience. The timer updates in real time and the music player lets you enjoy festive playlists while you wait.</p>
+      <div class="festival-links"><a href="/durga-puja-countdown/">Durga Puja Countdown 2026</a><a href="/kali-puja-countdown/">Kali Puja Countdown 2026</a><a href="/mahalaya-countdown/">Mahalaya Countdown 2026</a></div>
     </div>
   </details>
 </section>
@@ -151,7 +160,12 @@
       <h2 id="chaiTitle">Buy Me a Chai ☕</h2>
       <p>If Utsav made the festive countdown more enjoyable, you can support the project with a small voluntary contribution. It helps me keep improving and maintaining the site.</p>
       <img class="chai-qr" src="/buy-me-a-chai-qr.png" alt="UPI QR code to support Utsav">
-      <p class="upi-id"><strong>UPI:</strong> swarnavha1@fam</p>
+      <div class="upi-copy-row" aria-label="UPI ID">
+        <span class="upi-label">UPI ID</span>
+        <code id="upiIdValue">swarnavha1@fam</code>
+        <button type="button" class="upi-copy-button glass-button" id="copyUpi" aria-label="Copy UPI ID">Copy</button>
+      </div>
+      <p class="upi-copy-status" id="upiCopyStatus" aria-live="polite"></p>
       <p class="chai-small">No pressure at all — enjoying Utsav is already support. ❤️</p>
     </section>
   </div>
