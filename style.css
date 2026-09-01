@@ -535,14 +535,35 @@ body.mood-mode .creator-modal{display:none!important}
 
 /* Responsive artwork: full portrait art remains visible; a cover layer fills any aspect-ratio gap. */
 @media(max-width:700px){
+  /* Mobile uses ONLY the dedicated 9:16 artwork.
+     The old two-layer background (mobile + desktop) caused the artwork
+     to appear as a repeated/stacked strip on some phones. */
   .scene{
-    background-image:var(--mobile-bg),var(--desktop-bg);
-    background-size:contain,cover;
-    background-position:center center,center center;
-    background-repeat:no-repeat,no-repeat;
+    background-image:var(--mobile-bg);
+    background-size:cover;
+    background-position:center top;
+    background-repeat:no-repeat;
     background-color:#111016;
   }
   .creator-actions{gap:5px}
   .creator-action{padding:7px 9px;font-size:.62rem}
   .playlist-choices{grid-template-columns:1fr}
 }
+
+/* Playlist fallback link shown only when the server-side YouTube Data API cannot load. */
+.playlist-fallback{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  margin-top:12px;
+  min-height:40px;
+  padding:0 13px;
+  border-radius:12px;
+  color:#fff;
+  text-decoration:none;
+  background:rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.18);
+  font-size:.62rem;
+  font-weight:800;
+}
+.playlist-fallback:hover{background:rgba(255,255,255,.16)}

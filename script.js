@@ -6,6 +6,7 @@ const FESTIVALS={
     date:"Friday, 16 October 2026",
     playlistName:"Pujo Mood",
     playlistId:"PLcEXU5KhRttE",
+    playlistUrl:"https://www.youtube.com/playlist?list=PLcEXU5KhRttE",
     background:"/durga-puja.jpg",
     mobileBackground:"/durga-puja-mobile.jpg"
   },
@@ -16,6 +17,7 @@ const FESTIVALS={
     date:"Sunday, 8 November 2026",
     playlistName:"Shyama Night",
     playlistId:"PLHwvw4RcSUnk",
+    playlistUrl:"https://www.youtube.com/playlist?list=PLHwvw4RcSUnk",
     background:"/kali-puja.jpg",
     mobileBackground:"/kali-puja-mobile.jpg"
   },
@@ -29,8 +31,8 @@ const FESTIVALS={
     background:"/mahalaya.jpg",
     mobileBackground:"/mahalaya-mobile.jpg",
     playlists:{
-      iconic:{name:"Iconic Mahalaya",playlistId:"PLZMOb9zpbEKQ"},
-      collection:{name:"Mahalaya Collection",playlistId:"PLPEyl3dIK7O0"}
+      iconic:{name:"Iconic Mahalaya",playlistId:"PLZMOb9zpbEKQ",playlistUrl:"https://www.youtube.com/playlist?list=PLZMOb9zpbEKQ"},
+      collection:{name:"Mahalaya Collection",playlistId:"PLPEyl3dIK7O0",playlistUrl:"https://www.youtube.com/playlist?list=PLPEyl3dIK7O0"}
     }
   }
 };
@@ -47,7 +49,7 @@ let selected=getSelectedFestival();
 let ytPlayer=null,ytApiLoading=false,shuffle=false,repeat=false,playlistCache={};
 let currentPlaylistId=FESTIVALS[selected].playlistId;
 let currentPlaylistKey=selected==="mahalaya"?"iconic":"main";
-let playerGeneration=0;
+let playerGeneration=0,playlistRequestGeneration=0;
 const $=s=>document.querySelector(s);
 let celebrationShown={durga:false,kali:false,mahalaya:false};
 
@@ -273,9 +275,14 @@ $("#ytRepeat").addEventListener("click",()=>{
 
 async function getPlaylistItems(playlistId){
   if(playlistCache[playlistId])return playlistCache[playlistId];
-  const valid=Object.values(FESTIVALS).some(f=>f.playlistId===playlistId) ||
-    Object.values(FESTIVALS).some(f=>f.playlists && Object.values(f.playlists).some(p=>p.playlistId===playlistId));
-  if(!valid)throw new Error("Playlist is not configured.");
+  const configuredPlaylistIds=[];
+  Object.values(FESTIVALS).forEach(f=>{
+    if(f.playlistId)configuredPlaylistIds.push(f.playlistId);
+    if(f.playlists)Object.values(f.playlists).forEach(p=>configuredPlaylistIds.push(p.playlistId));
+  });
+  if(!configuredPlaylistIds.includes(playlistId)){
+    throw new Error("This playlist ID is not configured in the current Utsav build.");
+  }
 
   const controller=new AbortController();
   const timeout=setTimeout(()=>controller.abort(),12000);
@@ -330,19 +337,24 @@ function escapeAttr(v){
 }
 
 async function openPlaylist(){
+  const requestGeneration=++playlistRequestGeneration;
+  const requestedFestival=selected;
   const f=FESTIVALS[selected];
-  $("#modalTitle").textContent=selected==="mahalaya"
-    ? f.playlists[currentPlaylistKey].name
-    : f.playlistName;
+  const playlist=f.playlists ? f.playlists[currentPlaylistKey] : f;
+  const playlistUrl=playlist.playlistUrl;
+  $("#modalTitle").textContent=playlist.name||f.playlistName;
   $("#playlistModal").hidden=false;
   document.body.style.overflow="hidden";
   const box=$("#playlistItems");
   box.innerHTML='<div class="playlist-loading"><span class="loading-dot"></span> Loading all songs…</div>';
   try{
-    const items=await getPlaylistItems(currentPlaylistId);
+    const items=await getPlaylistItems(playlist.playlistId);
+    if(requestGeneration!==playlistRequestGeneration || requestedFestival!==selected)return;
     renderPlaylistItems(items);
   }catch(e){
-    box.innerHTML=`<div class="playlist-error"><strong>Could not load the playlist.</strong><br><br>${escapeHTML(e.message)}<br><br><small>Make sure <b>api/playlist.js</b> is committed to GitHub, <b>YOUTUBE_DATA_API_KEY</b> is set in Vercel, and the latest deployment is live.</small></div>`;
+    if(requestGeneration!==playlistRequestGeneration || requestedFestival!==selected)return;
+    const safeUrl=escapeAttr(playlistUrl||`https://www.youtube.com/playlist?list=${encodeURIComponent(playlist.playlistId)}`);
+    box.innerHTML=`<div class="playlist-error"><strong>Could not load the song list inside Utsav.</strong><br><br>${escapeHTML(e.message)}<br><br><small>For the in-site list, deploy <b>api/playlist.js</b> with <b>YOUTUBE_DATA_API_KEY</b> configured in Vercel. You can still open the selected playlist directly:</small><br><a class="playlist-fallback" href="${safeUrl}" target="_blank" rel="noopener noreferrer">Open selected playlist on YouTube ↗</a></div>`;
   }
 }
 function closePlaylist(){
