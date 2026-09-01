@@ -512,3 +512,37 @@ if('mediaSession' in navigator){
   try{navigator.mediaSession.setActionHandler('nexttrack',()=>{try{ytPlayer?.nextVideo()}catch(e){}})}catch(e){}
   try{navigator.mediaSession.setActionHandler('previoustrack',()=>{try{ytPlayer?.previousVideo()}catch(e){}})}catch(e){}
 }
+
+/* V6.2.1 player branding + compact footer breadcrumb
+   Keeps the change isolated to script.js so no other project files need updating. */
+(()=>{
+  const style=document.createElement('style');
+  style.textContent=`
+    .music-icon{overflow:hidden;padding:0!important;background:rgba(255,255,255,.96)!important;display:grid!important;place-items:center!important}
+    .music-icon img{display:block;width:100%;height:100%;object-fit:contain;border-radius:inherit}
+    .site-footer.footer-breadcrumb-only{justify-content:center!important;text-align:center!important;padding:10px 14px!important;margin-top:18px!important;margin-bottom:24px!important;min-height:0!important}
+    .site-footer.footer-breadcrumb-only .breadcrumbs{margin:0!important;max-width:100%;font-size:.68rem;padding:6px 10px;gap:6px}
+    .site-footer.footer-breadcrumb-only .breadcrumbs a,.site-footer.footer-breadcrumb-only .breadcrumbs span{white-space:nowrap}
+  `;
+  document.head.appendChild(style);
+
+  const musicIcon=document.querySelector('.music-icon');
+  if(musicIcon && !musicIcon.querySelector('img')){
+    const img=document.createElement('img');
+    img.src='/utsav-logo.png';
+    img.alt='Utsav logo';
+    img.width=39;
+    img.height=39;
+    img.decoding='async';
+    musicIcon.textContent='';
+    musicIcon.appendChild(img);
+    musicIcon.setAttribute('aria-label','Utsav logo');
+  }
+
+  const breadcrumbs=document.querySelector('.breadcrumbs');
+  const footer=document.querySelector('.site-footer');
+  if(breadcrumbs && footer){
+    footer.replaceChildren(breadcrumbs);
+    footer.classList.add('footer-breadcrumb-only');
+  }
+})();
