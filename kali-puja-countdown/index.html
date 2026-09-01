@@ -100,7 +100,7 @@
       <nav class="tabs glass" aria-label="Festival">
         <a class="tab" href="/durga-puja-countdown/" data-festival="durga"><small>01</small><span>Durga Puja</span></a>
         <a class="tab active" href="/kali-puja-countdown/" data-festival="kali"><small>02</small><span>Kali Puja</span></a>
-        <a class="tab" href="/diwali-countdown/" data-festival="diwali"><small>03</small><span>Diwali</span></a>
+        <a class="tab" href="/mahalaya-countdown/" data-festival="mahalaya"><small>03</small><span>Mahalaya</span></a>
       </nav>
 
       <section class="music glass">
@@ -112,6 +112,15 @@
             <p id="playlistStatus">Full playlist player • tap play to begin</p>
           </div>
           <button class="playlist-button glass-button" id="openPlaylist" type="button">☷ Full playlist ↗</button>
+        </div>
+
+        <div class="playlist-choices" id="mahalayaPlaylistChoices" hidden aria-label="Choose a Mahalaya playlist">
+          <button type="button" class="playlist-choice active" data-playlist="iconic" aria-pressed="true">
+            <span>Iconic Mahalaya</span><small>Traditional favourites</small>
+          </button>
+          <button type="button" class="playlist-choice" data-playlist="collection" aria-pressed="false">
+            <span>Mahalaya Collection</span><small>More iconic songs</small>
+          </button>
         </div>
 
         <div class="youtube-player" id="youtubePlayer"></div>
@@ -160,7 +169,7 @@
 <details><summary>Is Kali Puja also called Shyama Puja?</summary><p>Yes. Kali Puja is also known as Shyama Puja.</p></details>
 <details><summary>Is Kali Puja on the same day as Diwali in 2026?</summary><p>For 2026, the referenced festival calendars list Kali Puja and Diwali on Sunday, 8 November 2026.</p></details>
 
-<div class="festival-links"><a href="/">Utsav Home</a><a href="/durga-puja-countdown/">Durga Puja Countdown</a><a href="/kali-puja-countdown/">Kali Puja Countdown</a><a href="/diwali-countdown/">Diwali Countdown</a></div>
+<div class="festival-links"><a href="/">Utsav Home</a><a href="/durga-puja-countdown/">Durga Puja Countdown</a><a href="/kali-puja-countdown/">Kali Puja Countdown</a><a href="/mahalaya-countdown/">Mahalaya Countdown</a></div>
     </div>
   </details>
 </section>
@@ -201,7 +210,12 @@
       <h2 id="chaiTitle">Buy Me a Chai ☕</h2>
       <p>If Utsav made the festive countdown more enjoyable, you can support the project with a small voluntary contribution. It helps me keep improving and maintaining the site.</p>
       <img class="chai-qr" src="/buy-me-a-chai-qr.png" alt="UPI QR code to support Utsav">
-      <p class="upi-id"><strong>UPI:</strong> swarnavha1@fam</p>
+      <div class="upi-copy-row" aria-label="UPI ID">
+        <span class="upi-label">UPI ID</span>
+        <code id="upiIdValue">swarnavha1@fam</code>
+        <button type="button" class="upi-copy-button glass-button" id="copyUpi" aria-label="Copy UPI ID">Copy</button>
+      </div>
+      <p class="upi-copy-status" id="upiCopyStatus" aria-live="polite"></p>
       <p class="chai-small">No pressure at all — enjoying Utsav is already support. ❤️</p>
     </section>
   </div>
