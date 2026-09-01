@@ -243,6 +243,7 @@ function createYouTubePlayer(containerId,playlistId,height,isModal=false){
           const play=$("#ytPlay");
           if(play)play.textContent=e.data===YT.PlayerState.PLAYING?"Ⅱ":"▶";
           updateNowPlaying(e.target);
+          if(e.data===YT.PlayerState.PLAYING && typeof window.UtsavShowFirstPlayTip==="function") window.UtsavShowFirstPlayTip();
         }
       },
       onError:()=>{
@@ -545,4 +546,118 @@ if('mediaSession' in navigator){
     footer.replaceChildren(breadcrumbs);
     footer.classList.add('footer-breadcrumb-only');
   }
+})();
+
+/* V6.2.2 first-use guidance: game-style help + manga speech-bubble tips.
+   This module is intentionally isolated in script.js so the rest of the site stays unchanged. */
+(()=>{
+  const STORAGE_KEY='utsav_help_v1_seen';
+  const PLAY_TIP_KEY='utsav_play_tip_v1_seen';
+  const safeGet=(key)=>{try{return localStorage.getItem(key)==='1'}catch(_){return false}};
+  const safeSet=(key)=>{try{localStorage.setItem(key,'1')}catch(_){} };
+
+  const style=document.createElement('style');
+  style.textContent=`
+    .utsav-help-button{
+      border:1px solid rgba(255,255,255,.20);background:rgba(255,255,255,.07);color:#fff;
+      min-width:34px;height:34px;border-radius:50%;display:inline-grid;place-items:center;
+      font-size:.75rem;font-weight:900;cursor:pointer;margin-left:6px;flex:0 0 auto;
+      box-shadow:0 8px 22px rgba(0,0,0,.14);backdrop-filter:blur(10px)
+    }
+    .utsav-help-button:hover{background:rgba(255,255,255,.13)}
+    .utsav-help-overlay{position:fixed;inset:0;z-index:5000;display:grid;place-items:center;padding:20px;background:rgba(7,7,10,.58);backdrop-filter:blur(7px)}
+    .utsav-help-overlay[hidden],.utsav-tip[hidden]{display:none}
+    .utsav-help-card{position:relative;width:min(520px,calc(100vw - 32px));border:1px solid rgba(255,255,255,.22);border-radius:28px;padding:22px 18px 18px;background:linear-gradient(145deg,rgba(55,43,39,.96),rgba(24,24,29,.97));color:#fff;box-shadow:0 28px 80px rgba(0,0,0,.48);overflow:hidden}
+    .utsav-help-card:before{content:"";position:absolute;inset:-80px auto auto -50px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.07);filter:blur(8px)}
+    .utsav-help-kicker{font-size:.58rem;letter-spacing:.16em;font-weight:900;opacity:.55;text-transform:uppercase}
+    .utsav-help-card h2{margin:6px 0 7px;font-size:1.45rem;line-height:1.08}
+    .utsav-help-card>p{margin:0 0 16px;font-size:.78rem;line-height:1.5;opacity:.78}
+    .utsav-help-list{display:grid;gap:9px;margin:0 0 17px}
+    .utsav-help-item{display:grid;grid-template-columns:42px 1fr;gap:10px;align-items:center;padding:10px;border:1px solid rgba(255,255,255,.12);border-radius:16px;background:rgba(255,255,255,.055)}
+    .utsav-help-icon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:rgba(255,255,255,.11);font-size:1rem;font-weight:900}
+    .utsav-help-item b{display:block;font-size:.72rem}.utsav-help-item span{display:block;margin-top:3px;font-size:.61rem;line-height:1.35;opacity:.62}
+    .utsav-help-actions{display:flex;justify-content:flex-end;gap:8px}
+    .utsav-help-close{border:0;border-radius:999px;padding:10px 16px;background:rgba(255,255,255,.94);color:#202126;font-weight:900;font-size:.66rem;cursor:pointer}
+    .utsav-tip{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:calc(max(16px,env(safe-area-inset-bottom)) + 68px);z-index:4500;width:min(310px,calc(100vw - 32px));padding:13px 14px 13px 15px;border:1px solid rgba(255,255,255,.22);border-radius:19px;background:linear-gradient(145deg,rgba(45,38,39,.97),rgba(21,22,27,.97));color:#fff;box-shadow:0 18px 45px rgba(0,0,0,.38);animation:utsavTipIn .34s cubic-bezier(.2,.9,.25,1.2)}
+    .utsav-tip:after{content:"";position:absolute;right:28px;bottom:-11px;width:20px;height:20px;background:rgba(25,24,28,.98);border-right:1px solid rgba(255,255,255,.20);border-bottom:1px solid rgba(255,255,255,.20);transform:rotate(45deg)}
+    .utsav-tip.manga-left:after{right:auto;left:28px}
+    .utsav-tip-row{display:flex;align-items:flex-start;gap:10px;position:relative;z-index:1}
+    .utsav-tip-avatar{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.94);object-fit:contain;flex:0 0 auto;padding:2px}
+    .utsav-tip b{display:block;font-size:.68rem;line-height:1.2}.utsav-tip p{margin:4px 0 0;font-size:.61rem;line-height:1.4;opacity:.72}
+    .utsav-tip-close{position:absolute;right:8px;top:7px;border:0;background:transparent;color:rgba(255,255,255,.65);font-size:.8rem;cursor:pointer;z-index:2}
+    .utsav-tip-arrow{display:inline-block;margin-top:7px;font-size:.55rem;opacity:.45;letter-spacing:.04em}
+    .utsav-help-pulse{animation:utsavHelpPulse 1.8s ease-in-out 2}
+    @keyframes utsavTipIn{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+    @keyframes utsavHelpPulse{0%,100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}45%{box-shadow:0 0 0 8px rgba(255,255,255,.08)}}
+    @media(max-width:520px){.utsav-help-card{border-radius:23px;padding:18px 14px 14px}.utsav-help-card h2{font-size:1.3rem}.utsav-tip{right:16px;left:16px;width:auto}.utsav-tip:after{right:28px}}
+  `;
+  document.head.appendChild(style);
+
+  const musicHeading=document.querySelector('.music-heading');
+  if(!musicHeading)return;
+
+  // Persistent compact help control. The first visit also gets the full guided preview automatically.
+  let helpBtn=document.getElementById('utsavHelpButton');
+  if(!helpBtn){
+    helpBtn=document.createElement('button');
+    helpBtn.id='utsavHelpButton';
+    helpBtn.type='button';
+    helpBtn.className='utsav-help-button';
+    helpBtn.setAttribute('aria-label','Open Utsav quick help');
+    helpBtn.title='Quick help';
+    helpBtn.textContent='?';
+    const playlistBtn=document.getElementById('openPlaylist');
+    musicHeading.insertBefore(helpBtn,playlistBtn||null);
+  }
+
+  const overlay=document.createElement('div');
+  overlay.className='utsav-help-overlay';
+  overlay.hidden=true;
+  overlay.innerHTML=`
+    <section class="utsav-help-card" role="dialog" aria-modal="true" aria-labelledby="utsavHelpTitle">
+      <div class="utsav-help-kicker">WELCOME TO UTSAV • QUICK GUIDE</div>
+      <h2 id="utsavHelpTitle">Make the most of your Puja countdown</h2>
+      <p>A tiny game-style guide so a first-time visitor instantly knows what the controls do.</p>
+      <div class="utsav-help-list">
+        <div class="utsav-help-item"><div class="utsav-help-icon">▶</div><div><b>Play / Pause</b><span>Start or pause the current Puja song. The player remembers the selected track.</span></div></div>
+        <div class="utsav-help-item"><div class="utsav-help-icon">☷</div><div><b>Full playlist</b><span>Open the complete playlist inside Utsav and jump directly to another song.</span></div></div>
+        <div class="utsav-help-item"><div class="utsav-help-icon">✦</div><div><b>Mood</b><span>Hide the extra interface and enter the immersive countdown view while the music continues.</span></div></div>
+      </div>
+      <div class="utsav-help-actions"><button type="button" class="utsav-help-close" id="utsavHelpDone">Got it — let’s go</button></div>
+    </section>`;
+  document.body.appendChild(overlay);
+
+  const closeHelp=()=>{overlay.hidden=true;safeSet(STORAGE_KEY);helpBtn.classList.remove('utsav-help-pulse')};
+  const openHelp=()=>{overlay.hidden=false;safeSet(STORAGE_KEY);helpBtn.classList.remove('utsav-help-pulse');setTimeout(()=>document.getElementById('utsavHelpDone')?.focus(),30)};
+  helpBtn.addEventListener('click',openHelp);
+  document.getElementById('utsavHelpDone').addEventListener('click',closeHelp);
+  overlay.addEventListener('click',e=>{if(e.target===overlay)closeHelp()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!overlay.hidden)closeHelp()});
+
+  // First-visit preview: automatically teach the three key controls once.
+  if(!safeGet(STORAGE_KEY)){
+    helpBtn.classList.add('utsav-help-pulse');
+    setTimeout(()=>openHelp(),650);
+  }
+
+  let tip=null;
+  const removeTip=()=>{if(tip){tip.remove();tip=null}};
+  const showPlayTip=()=>{
+    if(safeGet(PLAY_TIP_KEY)||document.body.classList.contains('mood-mode'))return;
+    safeSet(PLAY_TIP_KEY);
+    removeTip();
+    tip=document.createElement('aside');
+    tip.className='utsav-tip';
+    tip.setAttribute('role','status');
+    tip.innerHTML=`<button type="button" class="utsav-tip-close" aria-label="Dismiss tip">×</button><div class="utsav-tip-row"><img class="utsav-tip-avatar" src="/utsav-logo.png" alt=""><div><b>Nice — the music is playing! 🎵</b><p>For a richer experience, try <strong>Mood</strong> ✦. You can also use <strong>Full playlist</strong> to browse every song.</p><span class="utsav-tip-arrow">↘ try Mood next</span></div></div>`;
+    document.body.appendChild(tip);
+    tip.querySelector('.utsav-tip-close').addEventListener('click',removeTip);
+    const mood=document.getElementById('moodMode');
+    mood?.classList.add('utsav-help-pulse');
+    setTimeout(()=>mood?.classList.remove('utsav-help-pulse'),3600);
+    setTimeout(()=>{if(tip)removeTip()},9000);
+  };
+
+  // Called by the existing YouTube state-change handler when playback actually begins.
+  window.UtsavShowFirstPlayTip=showPlayTip;
 })();
