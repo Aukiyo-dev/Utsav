@@ -2,8 +2,8 @@ const FESTIVALS={
   durga:{
     name:"Durga Puja",mark:"01",
     subtitle:"The first Puja day is almost here.",
-    target:"2026-10-16T00:00:00+05:30",
-    date:"Friday, 16 October 2026",
+    target:"2027-10-05T00:00:00+05:30",
+    date:"Tuesday, 5 October 2027",
     playlistName:"Pujo Mood",
     playlistId:"PLcEXU5KhRttE",
     playlistUrl:"https://www.youtube.com/playlist?list=PLcEXU5KhRttE",
@@ -13,8 +13,8 @@ const FESTIVALS={
   kali:{
     name:"Kali Puja",mark:"02",
     subtitle:"A night of lights, devotion and celebration.",
-    target:"2026-11-08T00:00:00+05:30",
-    date:"Sunday, 8 November 2026",
+    target:"2027-10-28T00:00:00+05:30",
+    date:"Thursday, 28 October 2027",
     playlistName:"Shyama Night",
     playlistId:"PLHwvw4RcSUnk",
     playlistUrl:"https://www.youtube.com/playlist?list=PLHwvw4RcSUnk",
@@ -24,8 +24,8 @@ const FESTIVALS={
   mahalaya:{
     name:"Mahalaya",mark:"03",
     subtitle:"The sacred Mahalaya morning is getting closer.",
-    target:"2026-10-10T00:00:00+05:30",
-    date:"Saturday, 10 October 2026",
+    target:"2027-09-29T00:00:00+05:30",
+    date:"Wednesday, 29 September 2027",
     playlistName:"Iconic Mahalaya",
     playlistId:"PLZMOb9zpbEKQ",
     background:"/mahalaya.jpg",
@@ -52,6 +52,7 @@ let currentPlaylistKey=selected==="mahalaya"?"iconic":"main";
 let playerGeneration=0,playlistRequestGeneration=0;
 const $=s=>document.querySelector(s);
 let celebrationShown={durga:false,kali:false,mahalaya:false};
+const countdownMode={durga:"current",kali:"current",mahalaya:"current"};
 
 const FESTIVE_MESSAGES={
   50:name=>`${name} is getting closer. There’s still a little time — enjoy the playlist and set the mood.`,
@@ -87,7 +88,18 @@ function triggerCelebration(){
 
 function updateCountdown(){
   const f=FESTIVALS[selected];
-  const diff=Math.max(0,new Date(f.target).getTime()-Date.now());
+  const now=Date.now();
+  const target=new Date(f.target).getTime();
+  const mode="current";
+  if(countdownMode[selected]!==mode){
+    resetCountdownMarkup();
+    celebrationShown[selected]=false;
+    document.body.classList.remove("festival-arrived");
+    countdownMode[selected]=mode;
+  }
+  const date=f.date;
+  $("#targetDate").textContent=date;
+  const diff=Math.max(0,target-now);
   if(diff<=0){
     const box=$(".countdown");
     if(box){
@@ -147,6 +159,7 @@ function destroyPlayer(){
 function renderFestival(){
   const f=FESTIVALS[selected];
   resetCountdownMarkup();
+  countdownMode[selected]="current";
   celebrationShown[selected]=false;
   document.body.classList.remove("festival-arrived");
   $("#festivalMark").textContent=f.mark;

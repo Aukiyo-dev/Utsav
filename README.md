@@ -1,12 +1,6 @@
 # Utsav — Festival Countdown & Music
 
-> **V6.2 FINAL 2026 RELEASE**
->
-> **No other Utsav version will be released after V6.2 during 2026.** No further feature, design, SEO, widget, logo, playlist, or other project updates are planned until **January 1, 2027**.
->
-> The **next planned version is January 1, 2027**. Until then, V6.2 is the stable production release.
-
-Utsav is a crawlable festival countdown site for **Durga Puja, Kali Puja and Mahalaya 2026**. Each festival has its own landing URL, countdown, artwork and music playlist.
+Utsav is a crawlable festival countdown site for **Durga Puja, Kali Puja and Mahalaya 2027**. Each festival has its own landing URL, countdown, artwork and music playlist.
 
 ## Festival playlists
 
@@ -25,9 +19,10 @@ There is **no standalone Diwali countdown or Diwali playlist** in this build. Re
 
 ## Countdown dates
 
-- **Mahalaya:** 10 October 2026
-- **Durga Puja countdown start:** 16 October 2026
-- **Kali Puja:** 8 November 2026
+- **Mahalaya:** 29 September 2027
+- **Durga Puja countdown target:** 5 October 2027
+- **Kali Puja:** 28 October 2027
+- All three 2027 countdowns are active immediately from November 11, 2026; no January 1 launch gate.
 
 The countdown is calculated in the browser from the configured ISO timestamp with the `+05:30` India offset.
 
@@ -218,26 +213,6 @@ mahalaya-countdown/index.html
 ```
 
 
-## V6.2 interface, logo and sharing features
-
-V6.2 includes the Utsav visual identity and compact interactive interface:
-
-- A custom **Utsav red-and-white vector-style logo** is used as the site's favicon and application identity.
-- Multiple favicon sizes and touch/PWA icons are included for browser tabs, bookmarks and supported device surfaces.
-- The logo is also supplied as part of the site's structured identity information.
-- Festival artwork, countdown, music controls and information are arranged as compact widget-style interface sections.
-- **Play/Pause** provides direct music control.
-- **Full Playlist** opens the selected festival's song list without mixing playlists between festivals.
-- **Mood** provides the immersive artwork-focused mode while keeping the countdown visible.
-- The first-use help experience explains the main player controls to new visitors.
-- Anime/manga-style guidance points toward the **Mood** control and can remind users about the feature during playback.
-- About, Buy Me a Chai, Aukiyo and support information are presented as compact interface controls.
-- The Buy Me a Chai area includes the UPI QR code and a copyable UPI ID.
-- Breadcrumbs and internal festival links help users navigate between the dedicated festival pages.
-- Custom 404 handling provides a branded recovery page for invalid URLs.
-- Dedicated social-share artwork and Open Graph metadata are included for link-sharing previews.
-- AMP alternatives are included for the three festival landing pages.
-
 ## V6 — Vercel Web Analytics
 
 V6 adds Vercel Web Analytics to all four static HTML pages:
@@ -288,6 +263,4 @@ Added lightweight AMP representations at `/durga-puja-countdown/amp/`, `/kali-pu
 
 No further updates, feature additions, design changes, SEO changes, or other modifications are planned after V6.2 during 2026.
 
-The next planned update will be released on **January 1, 2027**.
-
-Until then, **V6.2 is the stable final 2026 version** and should be treated as the production version of the project.
+The 2027 countdown season is active immediately upon deployment (November 11, 2026). All three countdowns calculate from the current time; there is no January 1, 2027 activation gate.
