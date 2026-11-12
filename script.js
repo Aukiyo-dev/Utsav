@@ -806,3 +806,31 @@ if('mediaSession' in navigator){
   window.UtsavStopSongTips=()=>{tipDismissedForSong=true;stopSongTips();};
 
 })();
+
+
+/* Utsav Puja Calendar: downloadable iCalendar file + event sharing */
+(()=>{
+  const events=[
+    {id:"mahalaya",name:"Mahalaya 2027",start:"20270929",end:"20270930",url:"https://utsav-countdown.vercel.app/mahalaya-countdown/",description:"Mahalaya countdown and festive playlist on Utsav."},
+    {id:"durga",name:"Durga Puja 2027",start:"20271005",end:"20271006",url:"https://utsav-countdown.vercel.app/durga-puja-countdown/",description:"Durga Puja countdown and festive playlist on Utsav."},
+    {id:"kali",name:"Kali Puja 2027",start:"20271028",end:"20271029",url:"https://utsav-countdown.vercel.app/kali-puja-countdown/",description:"Kali Puja countdown and festive playlist on Utsav."}
+  ];
+  const esc=s=>String(s).replace(/\\/g,"\\\\").replace(/\n/g,"\\n").replace(/,/g,"\\,").replace(/;/g,"\\;");
+  const makeICS=()=>{
+    const stamp=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/," ").trim()+"Z";
+    const lines=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Utsav//Puja Calendar 2027//EN","CALSCALE:GREGORIAN","METHOD:PUBLISH","X-WR-CALNAME:Utsav Puja Calendar 2027","X-WR-TIMEZONE:Asia/Kolkata"];
+    events.forEach((e,i)=>lines.push("BEGIN:VEVENT",`UID:${e.id}-2027@utsav-countdown.vercel.app`,`DTSTAMP:${stamp}`,`DTSTART;VALUE=DATE:${e.start}`,`DTEND;VALUE=DATE:${e.end}`,`SUMMARY:${esc(e.name)}`,`DESCRIPTION:${esc(e.description+"\\n"+e.url)}`,`URL:${e.url}`,"TRANSP:TRANSPARENT","END:VEVENT"));
+    lines.push("END:VCALENDAR");return lines.join("\r\n");
+  };
+  const feedback=document.getElementById("calendarFeedback");
+  const say=t=>{if(feedback)feedback.textContent=t;};
+  document.getElementById("downloadPujaCalendar")?.addEventListener("click",()=>{
+    const blob=new Blob(["\uFEFF"+makeICS()],{type:"text/calendar;charset=utf-8"});
+    const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="utsav-puja-calendar-2027.ics";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);say("Calendar file downloaded. Open it to import all three festival dates.");
+  });
+  document.querySelectorAll("[data-share-event]").forEach(btn=>btn.addEventListener("click",async()=>{
+    const e=events.find(x=>x.id===btn.dataset.shareEvent);if(!e)return;
+    const payload={title:e.name,text:`Save the date for ${e.name} with Utsav.`,url:e.url};
+    try{if(navigator.share)await navigator.share(payload);else if(navigator.clipboard?.writeText){await navigator.clipboard.writeText(e.url);say("Countdown link copied.");}else{say("Share this link: "+e.url);}}catch(err){if(err?.name!=="AbortError")say("Could not open sharing. Copy this link: "+e.url);}
+  }));
+})();

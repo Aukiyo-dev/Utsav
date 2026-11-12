@@ -264,3 +264,7 @@ Added lightweight AMP representations at `/durga-puja-countdown/amp/`, `/kali-pu
 No further updates, feature additions, design changes, SEO changes, or other modifications are planned after V6.2 during 2026.
 
 The 2027 countdown season is active immediately upon deployment (November 11, 2026). All three countdowns calculate from the current time; there is no January 1, 2027 activation gate.
+
+
+## Puja Calendar (2027)
+The homepage includes a responsive festival calendar for Mahalaya (29 September 2027), Durga Puja (5 October 2027), and Kali Puja (28 October 2027). Visitors can open Google Calendar templates, share individual countdown pages, or download one `.ics` file containing all three all-day events. The calendar is implemented client-side and does not require an API key or external service.
